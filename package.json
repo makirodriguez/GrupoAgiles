@@ -1,0 +1,36 @@
+{
+  "name": "grupoagiles",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cors": "2.8.5",
+    "express": "4.17.1",
+    "sqlite3": "5.0.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "6.1.0",
+    "standard": "16.0.3"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/standard/eslintrc.json"
+  },
+  "scripts": {
+    "start": "node backend/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "standard ."
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/makirodriguez/GrupoAgiles.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/makirodriguez/GrupoAgiles/issues"
+  },
+  "homepage": "https://github.com/makirodriguez/GrupoAgiles#readme"
+}
