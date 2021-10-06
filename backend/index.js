@@ -159,7 +159,7 @@ app.use(express.json()) // para tener el bodyparser
 // --------------------------- GET all -------------------------------
 
 app.get('/api/partidos', (req, res) => {
-  const sql = 'SELECT * FROM Partido inner join Equipo ORDER BY UTCDATE'
+  const sql = 'SELECT PartidoID, UTCDATE, GolesLocal, GolesVisit, Score, Equipo.Nombre Local, Equipo.ImgPath LocalPath, a.Nombre Visitante, a.ImgPath VisitantePath FROM Partido inner join Equipo on Equipo.EquipoID = Partido.LocalID inner join Equipo a on a.EquipoID = Partido.VisitanteID ORDER BY UTCDATE'
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message)
