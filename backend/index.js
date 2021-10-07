@@ -156,10 +156,23 @@ db.run(sql_create, err => {
 app.use(cors())
 app.use(express.json()) // para tener el bodyparser
 
+// ---------------------------- additions ---------------------------------------
+
+app.get('/api/usuarioxnombre/:name', (req, res) => {
+  const name = req.params.name
+  const sql = 'SELECT * FROM Usuario WHERE Nombre = ?'
+  db.all(sql, name, (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
+
 // --------------------------- GET all -------------------------------
 
 app.get('/api/partidos', (req, res) => {
-  const sql = 'SELECT * FROM Partido inner join Equipo ORDER BY UTCDATE'
+  const sql = 'SELECT PartidoID, UTCDATE, GolesLocal, GolesVisit, Score, Equipo.Nombre Local, Equipo.ImgPath LocalPath, a.Nombre Visitante, a.ImgPath VisitantePath FROM Partido inner join Equipo on Equipo.EquipoID = Partido.LocalID inner join Equipo a on a.EquipoID = Partido.VisitanteID ORDER BY UTCDATE'
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message)
@@ -186,7 +199,7 @@ app.get('/api/usuarios', (req, res) => {
   })
 })
 app.get('/api/predicciones', (req, res) => {
-  const sql = 'SELECT * FROM Prediccion inner join Usuario inner join Partido ORDER BY PartidoID'
+  const sql = 'SELECT PrediccionID, Resultado, Usuario.Nombre, Partido.PartidoID, Partido.UTCDATE FROM Prediccion inner join Usuario on Prediccion.UsuarioID = Usuario.UsuarioID inner join Partido on Prediccion.PartidoID = Partido.PartidoID ORDER BY Partido.PartidoID'
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message)
@@ -204,8 +217,71 @@ app.get('/api/torneos', (req, res) => {
   })
 })
 app.get('/api/rankings', (req, res) => {
-  const sql = 'SELECT * FROM Ranking inner join Usuario inner join Torneo ORDER BY Puntos'
+  const sql = 'SELECT RankingID, Puntos, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID ORDER BY Ranking.Puntos DESC'
   db.all(sql, [], (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
+
+// ------------------------ GET uno en especifico -------------------------------------
+
+app.get('/api/partidos/:id', (req, res) => {
+  const id = req.params.id
+  const sql = 'SELECT PartidoID, UTCDATE, GolesLocal, GolesVisit, Score, Equipo.Nombre Local, Equipo.ImgPath LocalPath, a.Nombre Visitante, a.ImgPath VisitantePath FROM Partido inner join Equipo on Equipo.EquipoID = Partido.LocalID inner join Equipo a on a.EquipoID = Partido.VisitanteID WHERE PartidoID = ?'
+  db.all(sql, id, (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
+app.get('/api/equipos/:id', (req, res) => {
+  const id = req.params.id
+  const sql = 'SELECT * FROM Equipo WHERE EquipoID = ?'
+  db.all(sql, id, (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
+app.get('/api/usuarios/:id', (req, res) => {
+  const id = req.params.id
+  const sql = 'SELECT * FROM Usuario WHERE UsuarioID = ?'
+  db.all(sql, id, (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
+app.get('/api/predicciones/:id', (req, res) => {
+  const id = req.params.id
+  const sql = 'SELECT PrediccionID, Resultado, Usuario.Nombre, Partido.PartidoID, Partido.UTCDATE FROM Prediccion inner join Usuario on Prediccion.UsuarioID = Usuario.UsuarioID inner join Partido on Prediccion.PartidoID = Partido.PartidoID WHERE PrediccionID = ?'
+  db.all(sql, id, (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
+app.get('/api/torneos/:id', (req, res) => {
+  const id = req.params.id
+  const sql = 'SELECT * FROM Torneo WHERE TorneoID = ?'
+  db.all(sql, id, (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
+app.get('/api/rankings/:id', (req, res) => {
+  const id = req.params.id
+  const sql = 'SELECT RankingID, Puntos, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID WHERE RankingID = ?'
+  db.all(sql, id, (err, rows) => {
     if (err) {
       return console.error(err.message)
     }
@@ -411,69 +487,6 @@ app.delete('/api/rankings/:id', (req, res) => {
       return console.error(err.message)
     }
     res.status(200).json(id)
-  })
-})
-
-// ------------------------ GET uno en especifico -------------------------------------
-
-app.get('/api/partidos/:id', (req, res) => {
-  const id = req.params.id
-  const sql = 'SELECT * FROM Partido inner join Equipo WHERE PartidoID = ?'
-  db.all(sql, id, (err, rows) => {
-    if (err) {
-      return console.error(err.message)
-    }
-    res.json(rows)
-  })
-})
-app.get('/api/equipos/:id', (req, res) => {
-  const id = req.params.id
-  const sql = 'SELECT * FROM Equipo WHERE EquipoID = ?'
-  db.all(sql, id, (err, rows) => {
-    if (err) {
-      return console.error(err.message)
-    }
-    res.json(rows)
-  })
-})
-app.get('/api/usuarios/:id', (req, res) => {
-  const id = req.params.id
-  const sql = 'SELECT * FROM Usuario WHERE UsuarioID = ?'
-  db.all(sql, id, (err, rows) => {
-    if (err) {
-      return console.error(err.message)
-    }
-    res.json(rows)
-  })
-})
-app.get('/api/predicciones/:id', (req, res) => {
-  const id = req.params.id
-  const sql = 'SELECT * FROM Prediccion inner join Usuario inner join Equipo WHERE PrediccionID = ?'
-  db.all(sql, id, (err, rows) => {
-    if (err) {
-      return console.error(err.message)
-    }
-    res.json(rows)
-  })
-})
-app.get('/api/torneos/:id', (req, res) => {
-  const id = req.params.id
-  const sql = 'SELECT * FROM Torneo WHERE TorneoID = ?'
-  db.all(sql, id, (err, rows) => {
-    if (err) {
-      return console.error(err.message)
-    }
-    res.json(rows)
-  })
-})
-app.get('/api/rankings/:id', (req, res) => {
-  const id = req.params.id
-  const sql = 'SELECT * FROM Ranking inner join Usuario inner join Torneo WHERE RankingID = ?'
-  db.all(sql, id, (err, rows) => {
-    if (err) {
-      return console.error(err.message)
-    }
-    res.json(rows)
   })
 })
 
