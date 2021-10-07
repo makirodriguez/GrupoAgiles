@@ -4,6 +4,7 @@ import history from "./helpers/history";
 import Home from "./pages/Home/Home";
 import Ranking from "./pages/Ranking/Ranking";
 import Prode from "./pages/Prode/Prode";
+import Login from "./pages/Login/Login";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <div className="p-5">
           <Switch>
             <Route path="/" exact component={Home} />
+            <Route path="/login" exact component={Login} />
             <Route path="/ranking" exact component={Ranking} />
             <Route path="/prode" exact component={Prode} />
             <Route path="*">

@@ -1,8 +1,8 @@
 import axios from "axios";
-import { useEffect } from "react";
+
 
 export default function Prode() {
-  useEffect(() => {
+
     axios
       .get("https://api.football-data.org/v2/matches", {
         headers: {
@@ -15,7 +15,7 @@ export default function Prode() {
         console.log(res);
       })
       .catch(() => console.log("error"));
-  }, []);
+
   return (
     <div className="w-100 d-flex flex-column align-items-center">
       <span className="h1">Predicciones</span>
