@@ -156,6 +156,19 @@ db.run(sql_create, err => {
 app.use(cors())
 app.use(express.json()) // para tener el bodyparser
 
+// ---------------------------- additions ---------------------------------------
+
+app.get('/api/usuarioxnombre/:name', (req, res) => {
+  const name = req.params.name
+  const sql = 'SELECT * FROM Usuario WHERE Nombre = ?'
+  db.all(sql, name, (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
+
 // --------------------------- GET all -------------------------------
 
 app.get('/api/partidos', (req, res) => {
