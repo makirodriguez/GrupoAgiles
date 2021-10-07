@@ -16,6 +16,11 @@ const Header = () => {
           </Link>
         </span>
         <span className="mx-3">
+          <Link to="/prode" className="text-white text-decoration-none">
+            Partidos
+          </Link>
+        </span>
+        <span className="mx-3">
           <Link to="/ranking" className="text-white text-decoration-none">
             Ranking
           </Link>
