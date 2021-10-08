@@ -1,20 +1,25 @@
 import axios from "axios";
 import { useEffect } from "react";
+import { useState } from "react";
 
 export default function Prode() {
+  const [partidos, setPartidos] = useState(null);
   useEffect(() => {
     axios
-      .get("https://api.football-data.org/v2/matches", {
+      .get(`http://127.0.0.1:3001/api/partidos`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer 4ac84deb5017487bb0c57a298189ee60",
           "Access-Control-Allow-Origin": "*"
         },
       })
       .then((res) => {
-        console.log(res);
+        console.log(res)
+        const lista = res.data;
+        setPartidos(lista);
+        
+        
       })
-      .catch(() => console.log("error"));
+      .catch(() => console.log("error de api local"));
   }, []);
   return (
     <div className="w-100 d-flex flex-column align-items-center">
@@ -30,28 +35,28 @@ export default function Prode() {
             height="60px"
             alt="psg-logo"
           />
-          <span>PSG</span>
+          <span>{partidos[0].Local}</span>
         </div>
         <div style={{ margin: "0 10rem" }}>
-          <span>Martes 28 de septiembre 15:45 UTC</span>
+          <span>{partidos[0].UTCDATE}</span>
           <div className="d-flex flex-row justify-content-center mt-3">
             <button
               className="border-0 p-3 px-4"
               style={{ background: "#ccc" }}
             >
-              L
+              {partidos[0].GolesLocal}
             </button>
             <button
               className="border-0 p-3 px-4 mx-2"
               style={{ background: "#ccc" }}
             >
-              E
+              -
             </button>
             <button
               className="border-0 p-3 px-4"
               style={{ background: "#ccc" }}
             >
-              V
+              {partidos[0].GolesVisit}
             </button>
           </div>
         </div>
@@ -62,7 +67,7 @@ export default function Prode() {
             height="60px"
             alt="psg-logo"
           />
-          <span>City</span>
+          <span>{partidos[0].Visitante}</span>
         </div>
       </div>
     </div>
