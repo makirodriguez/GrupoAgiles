@@ -55,34 +55,21 @@ export default function Login() {
 
                     })
                     .then((res) => {
-                        // busco el recien creado
-                        axios.get(`http://127.0.0.1:3001/api/usuarioxnombre/${localStorage.nombre}`, {
-                            headers: {
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*"
-                            },
+                        const id = Number(res.data.id)
+                        // posteo a rankings con torneo 1, puntos 0 y el id del usuario
+                        axios.post(`http://127.0.0.1:3001/api/rankings/`, {
+                          "Puntos": 0,
+                          "TorneoID": 1, //champions
+                          "UsuarioID": id
                         })
                         .then((res) => {
-                            const id = Number(res.data[0].UsuarioID)
-                            // posteo a rankings con torneo 1, puntos 0 y el id del usuario
-
-                                axios.post(`http://127.0.0.1:3001/api/rankings/`, {
-            
-                                    "Puntos": 0,
-                                    "TorneoID": 1, //champions
-                                    "UsuarioID": id
-            
-                                })
-                                .then((res) => {
-                                    console.log(res.data)
-                                })
-                                .catch(() => console.log("error"));
-                            
+                          window.alert(`Ingresado con éxito. Bienvenido/a ${localStorage.nombre}`)                   
                         })
                         .catch(() => console.log("error"));
-
                     })
                     .catch(() => console.log("error"));
+                }else{
+                  window.alert(`Ingresado con éxito. Bienvenido/a ${localStorage.nombre}`)
                 }
             })
             .catch(() => console.log("error"));
