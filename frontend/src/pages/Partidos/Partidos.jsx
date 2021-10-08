@@ -3,26 +3,26 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 export default function Prode() {
-  const [partidos, setPartidos] = useState(null);
+  const [partidos, getPartidos] = useState(0);
+
   useEffect(() => {
-    axios
-      .get(`http://127.0.0.1:3001/api/partidos`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        },
-      })
-      .then((res) => {
-        console.log(res)
-        const lista = res.data;
-        setPartidos(lista);
+    getAllMatches();
+  },[]);
+
+  function getAllMatches(){
+    axios.get(`http://127.0.0.1:3001/api/partidos`)
+    .then((response) => {
+        const data = response.data;
+        getPartidos(data);
+        console.log(partidos)
+    })
+    .catch(() => console.log("error"));
+  }
+
+    if (partidos.length > 0){
+      return(
         
-        
-      })
-      .catch(() => console.log("error de api local"));
-  }, []);
-  return (
-    <div className="w-100 d-flex flex-column align-items-center">
+      <div className="w-100 d-flex flex-column align-items-center">
       <span className="h1">Predicciones</span>
       <div
         className="d-flex flex-row w-100"
@@ -71,5 +71,9 @@ export default function Prode() {
         </div>
       </div>
     </div>
-  );
+        )
+    }else{
+      return(<p>no matches yet!</p>)
+    }
+
 }
