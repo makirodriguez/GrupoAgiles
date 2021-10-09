@@ -10,7 +10,7 @@ export default function Prode() {
   },[]);
 
   function getAllMatches(){
-    axios.get(`http://127.0.0.1:3001/api/partidos`)
+    axios.get(`http://127.0.0.1:3001/api/partidosterminados`)
     .then((response) => {
         const data = response.data;
         getPartidos(data);
@@ -21,30 +21,36 @@ export default function Prode() {
 
     if (partidos.length > 0){
       return(
-        
+        <div className="w-100 d-flex flex-column align-items-center">
+        <span className="h1">Partidos</span>
+        {partidos && (
+          <div>
+
+      {partidos.map((partido, index) => {  
+        return(
       <div className="w-100 d-flex flex-column align-items-center">
-      <span className="h1">Predicciones</span>
+      <span className="h1"></span>
       <div
         className="d-flex flex-row w-100"
         style={{ padding: "2rem 28rem", backgroundColor: "#f2f2f2" }}
       >
         <div className="d-flex flex-column justify-content-center align-items-center">
           <img
-            src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c4d8.png"
+            src={partido.LocalPath}
             width="60px"
             height="60px"
-            alt="psg-logo"
+            alt="logo-local"
           />
-          <span>{partidos[0].Local}</span>
+          <span>{partido.Local}</span>
         </div>
-        <div style={{ margin: "0 10rem" }}>
-          <span>{partidos[0].UTCDATE}</span>
+        <div className="w-100 d-flex flex-column align-items-center" style={{ margin: "0 10rem" }}>
+          <span>Finalizado</span>
           <div className="d-flex flex-row justify-content-center mt-3">
             <button
               className="border-0 p-3 px-4"
               style={{ background: "#ccc" }}
             >
-              {partidos[0].GolesLocal}
+              {partido.GolesLocal}
             </button>
             <button
               className="border-0 p-3 px-4 mx-2"
@@ -56,22 +62,25 @@ export default function Prode() {
               className="border-0 p-3 px-4"
               style={{ background: "#ccc" }}
             >
-              {partidos[0].GolesVisit}
+              {partido.GolesVisit}
             </button>
           </div>
         </div>
         <div className="d-flex flex-column justify-content-center align-items-center">
           <img
-            src="https://logodownload.org/wp-content/uploads/2017/02/manchester-city-fc-logo-escudo-badge.png"
+            src={partido.VisitantePath}
             width="60px"
             height="60px"
-            alt="psg-logo"
+            alt="logo-visitante"
           />
-          <span>{partidos[0].Visitante}</span>
+          <span>{partido.Visitante}</span>
         </div>
       </div>
     </div>
-        )
+        )})}
+
+      </div>)}
+        </div>)
     }else{
       return(<p>no matches yet!</p>)
     }
