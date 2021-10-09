@@ -16,6 +16,7 @@ function App() {
         <div className="p-5">
           <Switch>
             <Route path="/" exact component={Home} />
+            <Route path="/login" exact component={Login} />
             <Route path="/ranking" exact component={Ranking} />
             <Route path="/prode" exact component={Prode} />
             <Route path="/partidos" exact component={Partidos} />

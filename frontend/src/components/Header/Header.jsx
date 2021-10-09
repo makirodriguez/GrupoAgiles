@@ -30,6 +30,11 @@ const Header = () => {
             Mi perfil
           </Link>
         </span>
+        <span className="mx-3">
+          <Link to="/login" className="text-white text-decoration-none">
+            Login
+          </Link>
+        </span>
       </div>
     </div>
   );
