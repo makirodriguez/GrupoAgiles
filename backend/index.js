@@ -294,66 +294,84 @@ app.get('/api/rankings/:id', (req, res) => {
 app.post('/api/partidos', (req, res) => {
   const sql = 'INSERT INTO Partido (GolesLocal, GolesVisit, UTCDATE, Score, LocalID, VisitanteID) VALUES (?, ?, ?, ?, ?, ?)'
   const partido = [req.body.GolesLocal, req.body.GolesVisit, req.body.Utcdate, req.body.Score, req.body.LocalID, req.body.VisitanteID]
-  db.run(sql, partido, err => {
+  db.run(sql, partido, function (err, result) {
     if (err) {
       return console.error(err.message)
     } else {
-      res.status(201).json(partido)
+      res.status(201).json({
+        id: this.lastID,
+        data: partido
+      })
     }
   })
 })
 app.post('/api/equipos', (req, res) => {
   const sql = 'INSERT INTO Equipo (Nombre, ImgPath) VALUES (?, ?)'
   const equipo = [req.body.Nombre, req.body.ImgPath]
-  db.run(sql, equipo, err => {
+  db.run(sql, equipo, function (err, result) {
     if (err) {
       return console.error(err.message)
     } else {
-      res.status(201).json(equipo)
+      res.status(201).json({
+        id: this.lastID,
+        data: equipo
+      })
     }
   })
 })
 app.post('/api/usuarios', (req, res) => {
   const sql = 'INSERT INTO Usuario (Nombre) VALUES (?)'
   const usuario = [req.body.Nombre]
-  db.run(sql, usuario, err => {
+  db.run(sql, usuario, function (err, result) {
     if (err) {
       return console.error(err.message)
     } else {
-      res.status(201).json(usuario)
+      res.status(201).json({
+        id: this.lastID,
+        data: usuario
+      })
     }
   })
 })
 app.post('/api/predicciones', (req, res) => {
   const sql = 'INSERT INTO Prediccion (Resultado, PartidoID, UsuarioID) VALUES (?, ?, ?)'
   const predict = [req.body.Resultado, req.body.PartidoID, req.body.UsuarioID]
-  db.run(sql, predict, err => {
+  db.run(sql, predict, function (err, result) {
     if (err) {
       return console.error(err.message)
     } else {
-      res.status(201).json(predict)
+      res.status(201).json({
+        id: this.lastID,
+        data: predict
+      })
     }
   })
 })
 app.post('/api/torneos', (req, res) => {
   const sql = 'INSERT INTO Torneo (Nombre) VALUES (?)'
   const torneo = [req.body.Nombre]
-  db.run(sql, torneo, err => {
+  db.run(sql, torneo, function (err, result) {
     if (err) {
       return console.error(err.message)
     } else {
-      res.status(201).json(torneo)
+      res.status(201).json({
+        id: this.lastID,
+        data: torneo
+      })
     }
   })
 })
 app.post('/api/rankings', (req, res) => {
   const sql = 'INSERT INTO Ranking (Puntos, TorneoID, UsuarioID) VALUES (?, ?, ?)'
   const ranking = [req.body.Puntos, req.body.TorneoID, req.body.UsuarioID]
-  db.run(sql, ranking, err => {
+  db.run(sql, ranking, function (err, result) {
     if (err) {
       return console.error(err.message)
     } else {
-      res.status(201).json(ranking)
+      res.status(201).json({
+        id: this.lastID,
+        data: ranking
+      })
     }
   })
 })
