@@ -75,15 +75,15 @@ db.run(sql_create, err => {
     return console.error(err.message)
   }
 
-  /* Database seeding, esto desp lo sacamos
+/*  // Database seeding, esto desp lo sacamos
   const sql_insert = `INSERT INTO Usuario (UsuarioID, Nombre) VALUES
-    (1, 'Messi'),
-    (2, 'Neymar')`
+    (3, 'Cristiano Ronaldo'),
+    (4, 'Ronaldinho')`  
   db.run(sql_insert, err => {
     if (err) {
       return console.error(err.message)
     }
-  }) */
+  })*/
 })
 
 var sql_create = `CREATE TABLE IF NOT EXISTS Prediccion(
@@ -140,15 +140,15 @@ db.run(sql_create, err => {
     return console.error(err.message)
   }
 
-  /* / Database seeding, esto desp lo sacamos
+/* // Database seeding, esto desp lo sacamos
   const sql_insert = `INSERT INTO Ranking (RankingID, Puntos, TorneoID, UsuarioID) VALUES
-    (1, 10, 1, 1),
-    (2, 5, 1, 2)`
+    (3, 6, 1, 3),
+    (4, 7, 1, 4)`
   db.run(sql_insert, err => {
     if (err) {
       return console.error(err.message)
     }
-  }) */
+  })*/
 })
 
 // -------------------------------------------------------------------
