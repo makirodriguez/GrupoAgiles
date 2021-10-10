@@ -171,6 +171,15 @@ app.get('/api/usuarioxnombre/:name', (req, res) => {
 
 // --------------------------- GET all -------------------------------
 
+app.get('/api/partidosterminados', (req, res) => {
+  const sql = 'SELECT PartidoID, UTCDATE, GolesLocal, GolesVisit, Score, Equipo.Nombre Local, Equipo.ImgPath LocalPath, a.Nombre Visitante, a.ImgPath VisitantePath FROM Partido inner join Equipo on Equipo.EquipoID = Partido.LocalID inner join Equipo a on a.EquipoID = Partido.VisitanteID WHERE Partido.Score is not null ORDER BY UTCDATE desc LIMIT 16'
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
 app.get('/api/partidos', (req, res) => {
   const sql = 'SELECT PartidoID, UTCDATE, GolesLocal, GolesVisit, Score, Equipo.Nombre Local, Equipo.ImgPath LocalPath, a.Nombre Visitante, a.ImgPath VisitantePath FROM Partido inner join Equipo on Equipo.EquipoID = Partido.LocalID inner join Equipo a on a.EquipoID = Partido.VisitanteID ORDER BY UTCDATE'
   db.all(sql, [], (err, rows) => {
