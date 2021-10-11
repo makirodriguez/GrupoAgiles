@@ -28,7 +28,7 @@ for(let i = 0; i < prediccion.length; i++){
 }
 
 
-if (prediccion.length > 0){ 
+if (prediccionPorUsuario.length > 0){ 
   return(
     <div className="w-100 d-flex flex-column align-items-center">
     <span className="h1">Partidos</span>
