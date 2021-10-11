@@ -4,11 +4,10 @@ import { useEffect } from "react";
 export default function Prode() {
   useEffect(() => {
     axios
-      .get("https://api.football-data.org/v2/matches", {
+      .get("https://api.football-data.org/v2/competitions/CL/matches?stage=GROUP_STAGE", {
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer 4ac84deb5017487bb0c57a298189ee60",
-          "Access-Control-Allow-Origin": "*"
+          "X-Auth-Token": "4ac84deb5017487bb0c57a298189ee60",
         },
       })
       .then((res) => {

@@ -3,6 +3,7 @@ const app = express() // representa a la aplicacion
 const cors = require('cors')
 const sqlite3 = require('sqlite3').verbose()
 const path = require('path')
+const axios = require('axios')
 
 // nos conectamos a la db
 const db_name = path.join(__dirname, 'data', 'apptest.db')
@@ -16,8 +17,8 @@ const db = new sqlite3.Database(db_name, err => {
 // Creamos la tabla si no existe
 var sql_create = `CREATE TABLE IF NOT EXISTS Partido(
   PartidoID INTEGER PRIMARY KEY AUTOINCREMENT,
-  GolesLocal INTEGER NOT NULL,
-  GolesVisit INTEGER NOT NULL,
+  GolesLocal INTEGER,
+  GolesVisit INTEGER,
   UTCDATE TEXT,
   Score TEXT,
   LocalID INTEGER,
@@ -25,10 +26,13 @@ var sql_create = `CREATE TABLE IF NOT EXISTS Partido(
   FOREIGN KEY (LocalID) REFERENCES Equipo(EquipoID),
   FOREIGN KEY (VisitanteID) REFERENCES Equipo(EquipoID)
   );`
+  
 db.run(sql_create, err => {
   if (err) {
     return console.error(err.message)
   }
+})
+
 
   // Database seeding, esto desp lo sacamos
   // let sql_insert = `INSERT INTO Partido (PartidoID, GolesLocal, GolesVisit, UTCDATE, Score, LocalID, VisitanteID) VALUES
@@ -40,7 +44,6 @@ db.run(sql_create, err => {
   // if (err) {
   // return console.error(err.message)
   // }
-})
 // })
 
 // Creamos la tabla si no existe
@@ -516,6 +519,51 @@ app.delete('/api/rankings/:id', (req, res) => {
     res.status(200).json(id)
   })
 })
+//----------------------------------Cargamos los equipos a la BBDD-------------------------------------
+
+axios.get("https://api.football-data.org/v2/competitions/CL/teams?stage=GROUP_STAGE&season=2021", {
+      headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": "4ac84deb5017487bb0c57a298189ee60",
+        },
+      })
+      .then((res) => {
+        res.data.teams.map((x) => {
+            const sql = 'INSERT or REPLACE INTO Equipo (EquipoID, Nombre, ImgPath) VALUES (?, ?, ?)'
+            const equipo = [x.id, x.shortName, x.crestUrl]
+            db.run(sql, equipo, function (err, result) {
+            if (err) {
+              return console.error(err.message)
+            }
+          })
+        }
+          );
+        }
+      )
+      .catch(() => console.log("error"));
+
+axios.get("https://api.football-data.org/v2/competitions/CL/matches?stage=GROUP_STAGE", {
+      headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": "4ac84deb5017487bb0c57a298189ee60",
+        },
+      })
+      .then((res) => {
+        res.data.matches.map((x) => {
+            const sql = 'INSERT or REPLACE INTO Partido (PartidoID, GolesLocal, GolesVisit, UTCDATE, Score, LocalID, VisitanteID) VALUES (?, ?, ?, ?, ?, ?, ?)'
+            const partido = [x.id, x.score.fullTime.homeTeam, x.score.fullTime.awayTeam, x.utcDate, x.score.winner, x.homeTeam.id, x.awayTeam.id]
+            db.run(sql, partido, function (err, result) {
+            if (err) {
+              return console.error(err.message)
+            }
+          })
+        }
+          );
+        }
+      )
+      .catch(() => console.log("error"));
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -523,3 +571,6 @@ const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
+
+  
