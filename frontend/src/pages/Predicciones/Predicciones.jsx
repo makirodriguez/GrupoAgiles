@@ -31,7 +31,7 @@ for(let i = 0; i < prediccion.length; i++){
 if (prediccionPorUsuario.length > 0){ 
   return(
     <div className="w-100 d-flex flex-column align-items-center">
-    <span className="h1">Partidos</span>
+    <span className="h1">Partidos predecidos</span>
     {prediccion && (
       <div>
 
@@ -41,7 +41,7 @@ if (prediccionPorUsuario.length > 0){
   <span className="h1"></span>
   <div
     className="d-flex flex-row w-100"
-    style={{ padding: "2rem 28rem", backgroundColor: "#f2f2f2" }}
+    style={{ padding: "2rem 35rem", backgroundColor: "#f2f2f2" }}
   >
     <div className="d-flex flex-column justify-content-center align-items-center">
       <img
@@ -74,7 +74,7 @@ if (prediccionPorUsuario.length > 0){
           {prediccion.GolesVisit}
         </button>
       </div>
-      <span>Tu prediccion es {prediccion.Resultado}</span>
+      <span>Tu prediccion: {prediccion.Resultado}</span>
     </div>
     <div className="d-flex flex-column justify-content-center align-items-center">
       <img
