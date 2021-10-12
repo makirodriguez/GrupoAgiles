@@ -623,7 +623,7 @@ axios
 
 //----------------------------------------------------------------------------------------------------------------------
 
-//----------------------------------Caluclamos los puntos cuando se levanta la BBDD-------------------------------------
+//----------------------------------Sumamos los puntos cuando se levanta la BBDD-------------------------------------
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -668,8 +668,25 @@ async function demo() {
 }
 demo();
 
-// ----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
+// ----------------------------------Asigna puntos segun si le pegó o no------------------------------------------
+const asignaPuntos = `
+INSERT OR REPLACE INTO Prediccion 
+SELECT Prediccion.PrediccionID, PRediccion.Resultado, Prediccion.PartidoID, Prediccion.UsuarioID, CASE 
+            WHEN Prediccion.Resultado = Partido.Score
+            THEN 1
+            WHEN Prediccion.Resultado != Partido.Score
+            THEN 0
+        END AS Puntos
+FROM Prediccion INNER JOIN Partido ON Prediccion.PartidoID = Partido.PartidoID;`;
+db.run(asignaPuntos, function (err, result) {
+  if (err) {
+    return console.error(err.message);
+  }
+});
+
+//-------------------------------- Asignación de Puerto------------------------
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
