@@ -1,4 +1,4 @@
-const miPerfil = () => {
+const Perfil = () => {
     console.log("hola");
     return (
       <div className="">
@@ -7,5 +7,5 @@ const miPerfil = () => {
     );
   };
   
-  export default miPerfil;
+  export default Perfil;
   
