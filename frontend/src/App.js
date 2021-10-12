@@ -6,7 +6,9 @@ import Ranking from "./pages/Ranking/Ranking";
 import Prode from "./pages/Prode/Prode";
 import Login from "./pages/Login/Login";
 import Partidos from "./pages/Partidos/Partidos";
+import Predicciones from "./pages/Predicciones/Predicciones";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
             <Route path="/ranking" exact component={Ranking} />
             <Route path="/prode" exact component={Prode} />
             <Route path="/partidos" exact component={Partidos} />
+            <Route path="/predicciones" exact component={Predicciones} />
             <Route path="*">
               <Redirect to="/" />
             </Route>
