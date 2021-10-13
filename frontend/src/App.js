@@ -9,14 +9,22 @@ import Partidos from "./pages/Partidos/Partidos";
 import Predicciones from "./pages/Predicciones/Predicciones";
 import Perfil from "./pages/Perfil/Perfil";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import { useEffect } from "react";
+import axios from "axios";
 
 function App() {
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:3001/api/usuarioxnombre/${localStorage.nombre}`)
+      .then((response) => {
+        localStorage?.setItem("userID", response?.data[0]?.UsuarioID);
+      });
+  }, []);
   return (
     <div>
       <Router history={history}>
         <Header />
-        <div className="p-5">
+        <div className="">
           <Switch>
             <Route path="/" exact component={Login} />
             <Route path="/home" exact component={Home} />
