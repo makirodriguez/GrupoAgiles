@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
+import logo from "./icon.png";
 
 const Header = () => {
   return (
-    <div className="p-5 bg-primary d-flex w-100">
-      <div className="text-white">Logo</div>
-      <div style={{ marginLeft: "auto" }}>
+    <div className="bg-primary d-flex w-100">
+      <div>
+        <img src={logo} width="120px" height="120px" alt="Logo" />
+      </div>
+      <div className="p-5" style={{ marginLeft: "auto" }}>
         <span className="mx-3">
           <Link to="/home" className="text-white text-decoration-none">
             Home
