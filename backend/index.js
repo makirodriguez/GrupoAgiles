@@ -93,6 +93,7 @@ var sql_create = `CREATE TABLE IF NOT EXISTS Prediccion(
   Resultado TEXT NOT NULL,
   PartidoID INTEGER,
   UsuarioID INTEGER,
+  Puntos BOOLEAN,
   FOREIGN KEY (PartidoID) REFERENCES Partido(PartidoID),
   FOREIGN KEY (UsuarioID) REFERENCES Usuario(UsuarioID)
   );`;

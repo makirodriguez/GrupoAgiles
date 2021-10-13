@@ -65,7 +65,7 @@ export default function Predicciones() {
                       style={{ margin: "0 10rem" }}
                     >
                       <span>
-                        {prediccion.score !== null ? "Por jugar" : "Fnalizado"}
+                        {prediccion.Score == null ? "Por jugar" : "Fnalizado"}
                       </span>
                       <div className="d-flex flex-row justify-content-center mt-3">
                         <button
