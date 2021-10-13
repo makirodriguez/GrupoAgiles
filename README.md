@@ -17,9 +17,9 @@ yarn start
 ```
 El servicio se ejecuta en localhost:3000
 ### Integrantes
-Albea, Santiago
-Comelles, Ignacio
-Mazzeo, Octavio
-Rodriguez, Macarena
-Santarelli, Luca
-Scorticati, Agustin
+- Albea, Santiago
+- Comelles, Ignacio
+- Mazzeo, Octavio
+- Rodriguez, Macarena
+- Santarelli, Luca
+- Scorticati, Agustin
