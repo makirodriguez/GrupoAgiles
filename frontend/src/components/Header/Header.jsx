@@ -6,7 +6,7 @@ const Header = () => {
       <div className="text-white">Logo</div>
       <div style={{ marginLeft: "auto" }}>
         <span className="mx-3">
-          <Link to="/" className="text-white text-decoration-none">
+          <Link to="/home" className="text-white text-decoration-none">
             Home
           </Link>
         </span>
@@ -31,12 +31,12 @@ const Header = () => {
           </Link>
         </span>
         <span className="mx-3">
-          <Link to="/" className="text-white text-decoration-none">
+          <Link to="/perfil" className="text-white text-decoration-none">
             Mi perfil
           </Link>
         </span>
         <span className="mx-3">
-          <Link to="/login" className="text-white text-decoration-none">
+          <Link to="/" className="text-white text-decoration-none">
             Login
           </Link>
         </span>
