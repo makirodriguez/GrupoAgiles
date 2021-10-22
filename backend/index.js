@@ -222,7 +222,7 @@ app.get('/api/usuarios', (req, res) => {
 
 app.get('/api/prediccionesPorPartido', (req, res) => {
   const sql =
-    'SELECT Partido.PartidoID, Partido.Matchday, UTCDATE, Partido.GolesLocal, Partido.GolesVisit, Prediccion.GolesLocal, Prediccion.GolesVisitante, Score, Equipo.Nombre Local, Equipo.ImgPath LocalPath, a.Nombre Visitante, a.ImgPath VisitantePath, Usuario.Nombre, Prediccion.Resultado FROM Partido inner join Equipo on Equipo.EquipoID = Partido.LocalID  inner join Equipo a on a.EquipoID = Partido.VisitanteID  inner join Prediccion on Partido.PartidoID=Prediccion.PartidoID inner join Usuario on Prediccion.UsuarioID=Usuario.UsuarioID  ORDER BY Partido.PartidoID '
+    'SELECT Partido.PartidoID, Partido.Matchday, UTCDATE, Partido.GolesLocal, Partido.GolesVisit, Prediccion.GolesLocal as GolesLocalPredichos, Prediccion.GolesVisitante, Score, Equipo.Nombre Local, Equipo.ImgPath LocalPath, a.Nombre Visitante, a.ImgPath VisitantePath, Usuario.Nombre, Prediccion.Resultado FROM Partido inner join Equipo on Equipo.EquipoID = Partido.LocalID  inner join Equipo a on a.EquipoID = Partido.VisitanteID  inner join Prediccion on Partido.PartidoID=Prediccion.PartidoID inner join Usuario on Prediccion.UsuarioID=Usuario.UsuarioID  ORDER BY Partido.PartidoID '
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message)
