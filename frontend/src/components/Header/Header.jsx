@@ -5,7 +5,9 @@ const Header = () => {
   return (
     <div className="bg-primary d-flex w-100">
       <div>
-        <img src={logo} width="120px" height="120px" alt="Logo" />
+        <Link to="/home" className="text-white text-decoration-none">
+          <img src={logo} width="120px" height="120px" alt="Logo" />
+        </Link>
       </div>
       <div className="p-5" style={{ marginLeft: "auto" }}>
         <span className="mx-3">
