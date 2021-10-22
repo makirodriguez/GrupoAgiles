@@ -233,7 +233,7 @@ app.get('/api/prediccionesPorPartido', (req, res) => {
 
 app.get('/api/predicciones', (req, res) => {
   const sql =
-    'SELECT PrediccionID, Prediccion.GolesLocal, Prediccion.GolesVisitante, Resultado, Usuario.Nombre, Partido.PartidoID, Partido.UTCDATE FROM Prediccion inner join Usuario on Prediccion.UsuarioID = Usuario.UsuarioID inner join Partido on Prediccion.PartidoID = Partido.PartidoID ORDER BY Partido.PartidoID'
+    'SELECT PrediccionID, Prediccion.GolesLocal, Prediccion.GolesVisitante, Resultado, Usuario.Nombre, Partido.PartidoID, Partido.UTCDATE, Prediccion.Matchday, Prediccion.Puntos FROM Prediccion inner join Usuario on Prediccion.UsuarioID = Usuario.UsuarioID inner join Partido on Prediccion.PartidoID = Partido.PartidoID ORDER BY Partido.PartidoID'
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message)
@@ -686,13 +686,13 @@ demo()
 
 // ----------------------------------Asigna puntos segun si le pegó o no------------------------------------------
 const asignaPuntos = `
-INSERT OR REPLACE INTO Prediccion 
-SELECT Prediccion.PrediccionID, PRediccion.Resultado, Prediccion.PartidoID, Prediccion.UsuarioID, CASE 
+INSERT OR REPLACE INTO Prediccion
+SELECT Prediccion.PrediccionID, Prediccion.Resultado, Prediccion.PartidoID, Prediccion.UsuarioID, CASE 
             WHEN Prediccion.Resultado = Partido.Score
             THEN 1
             WHEN Prediccion.Resultado != Partido.Score
             THEN 0
-        END AS Puntos
+        END AS Puntos, Partido.Matchday, Prediccion.GolesLocal, Prediccion.GolesVisitante
 FROM Prediccion INNER JOIN Partido ON Prediccion.PartidoID = Partido.PartidoID;`
 db.run(asignaPuntos, function (err, result) {
   if (err) {
