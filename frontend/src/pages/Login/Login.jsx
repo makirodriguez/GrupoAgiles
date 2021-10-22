@@ -58,6 +58,7 @@ export default function Login() {
               })
               .then((res) => {
                 const id = Number(res.data.id);
+                localStorage.userID = id; 
                 // posteo a rankings con torneo 1, puntos 0 y el id del usuario
                 axios
                   .post(`http://127.0.0.1:3001/api/rankings/`, {
@@ -74,6 +75,9 @@ export default function Login() {
               })
               .catch(() => console.log("error"));
           } else {
+            console.log(res.data[0].UsuarioID)
+            const id = Number(res.data[0].UsuarioID);
+            localStorage.userID = id;
             window.alert(
               `Ingresado con éxito. Bienvenido/a ${localStorage.nombre}`
             );

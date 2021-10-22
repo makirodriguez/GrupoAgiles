@@ -13,13 +13,7 @@ import { useEffect } from "react";
 import axios from "axios";
 
 function App() {
-  useEffect(() => {
-    axios
-      .get(`http://127.0.0.1:3001/api/usuarioxnombre/${localStorage.nombre}`)
-      .then((response) => {
-        localStorage?.setItem("userID", response?.data[0]?.UsuarioID);
-      });
-  }, []);
+  
   return (
     <div>
       <Router history={history}>
