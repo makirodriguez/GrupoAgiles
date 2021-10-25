@@ -178,6 +178,16 @@ app.get('/api/usuarioxnombre/:name', (req, res) => {
     res.json(rows)
   })
 })
+app.get('/api/participantesxtorneo/:id', (req, res) => {
+  const id = req.params.id
+  const sql = 'SELECT Usuario.Nombre FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Torneo.TorneoID = Ranking.TorneoID WHERE Ranking.TorneoID = ?'
+  db.all(sql, id, (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
 
 // --------------------------- GET all -------------------------------
 
