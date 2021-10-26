@@ -1,3 +1,4 @@
+import { formControlClasses } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -8,7 +9,8 @@ export default function Predicciones() {
   const [match, setMatchs] = useState(0);
   const prediccionPorUsuario = [];
   const matchs = [];
-  const partidosPorMatchday = [];
+  const partidosYPredicciones = [];
+  
 
 
   useEffect(() => {
@@ -22,7 +24,6 @@ export default function Predicciones() {
       .then((response) => {
         const data = response.data;
         getPrediccion(data);
-        console.log(data);
       })
       .catch(() => console.log("error"));
   }
@@ -33,7 +34,6 @@ export default function Predicciones() {
             .filter((item) => item.Matchday)
             localStorage.Matchday = dataMatchday[0].Matchday
             getPartidos(dataMatchday);
-            console.log(dataMatchday)
   })
     .catch(() => console.log("error"));
   }
@@ -45,6 +45,13 @@ export default function Predicciones() {
   }
 
 
+  for(let i = 0; i< prediccionPorUsuario.length; i++){
+    const elemento = prediccionPorUsuario[i].Matchday;
+    if(elemento == match){
+      partidosYPredicciones.push(prediccionPorUsuario[i]);    
+    }
+  }
+
   for (let i = 0; i < partidos.length; i++) {
     const elemento = partidos[i].Matchday;
  
@@ -53,9 +60,27 @@ export default function Predicciones() {
     }
 
     if(elemento == match){
-      partidosPorMatchday.push(partidos[i]);
+      partidosYPredicciones.push(partidos[i])
+      
     }
   } 
+
+
+  const setObj = new Set(); 
+
+  const unicos = partidosYPredicciones.reduce((acc, e) => {
+    if (!setObj.has(e.PartidoID)){
+      setObj.add(e.PartidoID, e)
+      acc.push(e)
+    }
+    return acc;
+  },[]);
+
+  console.log(unicos)
+
+
+
+console.log(partidosYPredicciones)
 
   const handleChange = (e) => {
     setMatchs(e.target.value);
@@ -80,8 +105,7 @@ export default function Predicciones() {
         </select>
         {prediccion && (
           <div>
-            {prediccionPorUsuario.map((prediccion, index) => {
-
+            {unicos.map((prediccion, index) => {
               return (
                 <div className="w-100 d-flex flex-column align-items-center">
                   <span className="h1"></span>
