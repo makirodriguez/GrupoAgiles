@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 export default function Predicciones() {
   const [prediccion, getPrediccion] = useState(0);
   const [partidos, getPartidos] = useState(0);
+  const [match, setMatchs] = useState(0);
   const prediccionPorUsuario = [];
   const matchs = [];
 
@@ -42,6 +43,14 @@ export default function Predicciones() {
   }
 
   for (let i = 0; i < partidos.length; i++) {
+    for (let j = 0; i < matchs.length; j++) {
+    if (partidos[i].Matchday === matchs[j]) {
+      console.log(partidos[i], matchs[j]);
+    }
+  }
+  }
+
+  for (let i = 0; i < partidos.length; i++) {
     const elemento = partidos[i].Matchday;
  
     if (!matchs.includes(partidos[i].Matchday)) {
@@ -49,13 +58,12 @@ export default function Predicciones() {
     }
   } 
 
+  const handleChange = (e) => {
+    console.log(`Seleccionaste ${e.target.value}`);
+    setMatchs(e.target.value);
+}
 
-  function opcionesMatch(){
-    for (var i = 0; i < matchs.length; ++i) {
-      matchs[matchs.length] = new Option(matchs[i], matchs[i]);
-  }
-  }
-  console.log(opcionesMatch());
+
 
   const text = {
     HOME_TEAM: "Equipo local",
@@ -67,11 +75,11 @@ export default function Predicciones() {
     return (
       <div className="w-100 d-flex flex-column align-items-center">
         <span className="h1">Partidos predichos</span>
-        <select>
-          <option>Seleccione una fecha</option>
-          {matchs.map(e => {
-            <option>{e}</option>
-          })}
+        <select className="custom-select my-1 mr-2" id="inlineFormCustomSelect" name="Matchday" onChange={handleChange}>
+        <option selected>Seleccione una fecha</option>
+            {matchs.map(i =>(
+            <option value={i}>Fecha {[i]}</option>
+            ))}
         </select>
         {prediccion && (
           <div>
