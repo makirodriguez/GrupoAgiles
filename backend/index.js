@@ -262,7 +262,7 @@ app.get('/api/torneos', (req, res) => {
 })
 app.get('/api/rankings', (req, res) => {
   const sql =
-    'SELECT RankingID, Puntos, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID ORDER BY Ranking.Puntos DESC'
+    'SELECT DISTINCT RankingID, Ranking.Puntos, count(case when Prediccion.Puntos = 1 then 1 else null end) as Aciertos, count(case when Prediccion.Puntos = 0 then 1 else null end) as Fallos, count(case when Prediccion.Puntos = 3 then 1 else null end) as Perfect, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID INNER JOIN Prediccion on Usuario.UsuarioID = Prediccion.UsuarioID Group by Usuario.Nombre ORDER by Ranking.Puntos DESC'
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message)
