@@ -11,14 +11,9 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 //Funcion para la creacion de las rows
-function createData(poss, user, points) {
-        return {poss, user, points };
+function createData(poss, user, perfects, wins, losses, points) {
+        return {poss, user, perfects, wins, losses, points };
 };
-
-//Usariamos esta para en la iteracion 2 ampliar con wins y losses
-/*function createData(poss, user, wins, losses, points) {
-        return {poss, user, wins, losses, points };
-};*/
 
 
 //Funcion general del ranking
@@ -28,6 +23,7 @@ export default function Ranking() {
   useEffect(() => {
     getAllRankings();
   },[]);
+
 
 //Crecion funcion que devuelve los usuarios y sus puntos del torneo de la champions
 function getAllRankings(){
@@ -42,15 +38,9 @@ function getAllRankings(){
 //Creacion del array de usuarios ordenados por puntos
 const rows = [];
 for (let i = 0; i < rankings.length ; i++) {
-        rows.push(createData(i+1,rankings[i].Usuario, rankings[i].Puntos));
-        console.log(rows);
-        }
 
-//Usariamos esta para en la iteracion 2 ampliar con wins y losses
-/*for (let i = 0; i < rankings.length ; i++) {
-        rows.push(createData(i+1,rankings[i].Usuario, 9, 3, rankings[i].Puntos));
-        console.log(rows);
-        }*/
+        rows.push(createData(i+1,rankings[i].Usuario, rankings[i].Perfect, rankings[i].Aciertos, rankings[i].Fallos, rankings[i].Puntos));
+        }
 
 //Creacion completa de la tabla
   return (
@@ -60,6 +50,9 @@ for (let i = 0; i < rankings.length ; i++) {
           <TableRow>
             <TableCell>Posicion</TableCell>
             <TableCell align="left">Usuario</TableCell>
+            <TableCell align="right">Perfects</TableCell>
+            <TableCell align="right">Aciertos</TableCell>
+            <TableCell align="right">Fallos</TableCell>
             <TableCell align="right">Puntos</TableCell>
           </TableRow>
         </TableHead>
@@ -73,38 +66,7 @@ for (let i = 0; i < rankings.length ; i++) {
                 {row.poss}
               </TableCell>
               <TableCell align="left">{row.user}</TableCell>
-              <TableCell align="right">{row.points}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
-
-//para la iteracion 2
-/*  return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Posicion</TableCell>
-            <TableCell align="left">Usuario</TableCell>
-            <TableCell align="right">Ganados</TableCell>
-            <TableCell align="right">Perdidos</TableCell>
-            <TableCell align="right">Puntos</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.poss}
-              </TableCell>
-              <TableCell align="left">{row.user}</TableCell>
+              <TableCell align="right">{row.perfects}</TableCell>
               <TableCell align="right">{row.wins}</TableCell>
               <TableCell align="right">{row.losses}</TableCell>
               <TableCell align="right">{row.points}</TableCell>
@@ -114,4 +76,4 @@ for (let i = 0; i < rankings.length ; i++) {
       </Table>
     </TableContainer>
   );
-}*/
+}
