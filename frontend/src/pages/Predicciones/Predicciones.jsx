@@ -4,10 +4,13 @@ import { useState } from "react";
 
 export default function Predicciones() {
   const [prediccion, getPrediccion] = useState(0);
+  const [partidos, getPartidos] = useState(0);
   const prediccionPorUsuario = [];
+  const matchs = [];
 
   useEffect(() => {
     getAllPredicts();
+    getAllPartidos();
   }, []);
 
   function getAllPredicts() {
@@ -21,12 +24,38 @@ export default function Predicciones() {
       .catch(() => console.log("error"));
   }
 
+  function getAllPartidos(){
+    axios.get(`http://127.0.0.1:3001/api/partidos`).then((response1) => {
+          const dataMatchday = response1.data
+            .filter((item) => item.Matchday)
+            localStorage.Matchday = dataMatchday[0].Matchday
+            getPartidos(dataMatchday);
+            console.log(dataMatchday)
+  })
+    .catch(() => console.log("error"));
+  }
   //Guardo en un nuevo array las predicciones que son de un mismo usuario
   for (let i = 0; i < prediccion.length; i++) {
     if (prediccion[i].Nombre === localStorage.nombre) {
       prediccionPorUsuario.push(prediccion[i]);
     }
   }
+
+  for (let i = 0; i < partidos.length; i++) {
+    const elemento = partidos[i].Matchday;
+ 
+    if (!matchs.includes(partidos[i].Matchday)) {
+      matchs.push(elemento);
+    }
+  } 
+  console.log(matchs)
+
+  function opcionesMatch(){
+    for (var i = 0; i < matchs.length; ++i) {
+      matchs[matchs.length] = new Option(matchs[i], matchs[i]);
+  }
+  }
+  console.log(opcionesMatch());
 
   const text = {
     HOME_TEAM: "Equipo local",
@@ -38,6 +67,7 @@ export default function Predicciones() {
     return (
       <div className="w-100 d-flex flex-column align-items-center">
         <span className="h1">Partidos predichos</span>
+        <select><option>Seleccione una fecha</option></select>
         {prediccion && (
           <div>
             {prediccionPorUsuario.map((prediccion, index) => {
