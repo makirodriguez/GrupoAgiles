@@ -8,6 +8,8 @@ export default function Predicciones() {
   const [match, setMatchs] = useState(0);
   const prediccionPorUsuario = [];
   const matchs = [];
+  const partidosPorMatchday = [];
+
 
   useEffect(() => {
     getAllPredicts();
@@ -42,13 +44,6 @@ export default function Predicciones() {
     }
   }
 
-  for (let i = 0; i < partidos.length; i++) {
-    for (let j = 0; i < matchs.length; j++) {
-    if (partidos[i].Matchday === matchs[j]) {
-      console.log(partidos[i], matchs[j]);
-    }
-  }
-  }
 
   for (let i = 0; i < partidos.length; i++) {
     const elemento = partidos[i].Matchday;
@@ -56,13 +51,15 @@ export default function Predicciones() {
     if (!matchs.includes(partidos[i].Matchday)) {
       matchs.push(elemento);
     }
+
+    if(elemento == match){
+      partidosPorMatchday.push(partidos[i]);
+    }
   } 
 
   const handleChange = (e) => {
-    console.log(`Seleccionaste ${e.target.value}`);
     setMatchs(e.target.value);
 }
-
 
 
   const text = {
@@ -84,6 +81,7 @@ export default function Predicciones() {
         {prediccion && (
           <div>
             {prediccionPorUsuario.map((prediccion, index) => {
+
               return (
                 <div className="w-100 d-flex flex-column align-items-center">
                   <span className="h1"></span>
@@ -147,7 +145,8 @@ export default function Predicciones() {
                   </div>
                 </div>
               );
-            })}
+            } )}
+        
           </div>
         )}
       </div>
