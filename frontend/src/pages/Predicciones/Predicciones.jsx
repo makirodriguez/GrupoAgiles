@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 
 export default function Predicciones() {
   const [prediccion, getPrediccion] = useState(0);
@@ -48,7 +48,7 @@ export default function Predicciones() {
       matchs.push(elemento);
     }
   } 
-  console.log(matchs)
+
 
   function opcionesMatch(){
     for (var i = 0; i < matchs.length; ++i) {
@@ -67,7 +67,12 @@ export default function Predicciones() {
     return (
       <div className="w-100 d-flex flex-column align-items-center">
         <span className="h1">Partidos predichos</span>
-        <select><option>Seleccione una fecha</option></select>
+        <select>
+          <option>Seleccione una fecha</option>
+          {matchs.map(e => {
+            <option>{e}</option>
+          })}
+        </select>
         {prediccion && (
           <div>
             {prediccionPorUsuario.map((prediccion, index) => {
