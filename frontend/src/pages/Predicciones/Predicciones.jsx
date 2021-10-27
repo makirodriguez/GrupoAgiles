@@ -93,17 +93,18 @@ console.log(partidosYPredicciones)
     DRAW: "Empate",
   };
 
-  if (prediccionPorUsuario.length > 0) {
     return (
       <div className="w-100 d-flex flex-column align-items-center">
         <span className="h1">Partidos predichos</span>
         <select className="custom-select my-1 mr-2" id="inlineFormCustomSelect" name="Matchday" onChange={handleChange}>
-        <option selected>Seleccione una fecha</option>
+        <option default>Seleccione una fecha</option>
             {matchs.map(i =>(
             <option value={i}>Fecha {[i]}</option>
             ))}
         </select>
+        
         {prediccion && (
+
           <div>
             {unicos.map((prediccion, index) => {
               return (
@@ -175,7 +176,5 @@ console.log(partidosYPredicciones)
         )}
       </div>
     );
-  } else {
-    return <p>no matches yet!</p>;
-  }
+  
 }
