@@ -130,10 +130,11 @@ console.log(partidosYPredicciones)
                       className="w-100 d-flex flex-column align-items-center"
                       style={{ margin: "0 10rem" }}
                     >
+                      
                       <span>
                         {prediccion.Score == null ? "Por jugar" : "Finalizado"}
                       </span>
-                      <div className="d-flex flex-row justify-content-center mt-3">
+                      <span>{(new Date(prediccion.UTCDATE)).toLocaleDateString('es-AR', {weekday: 'long', month: 'long', day: 'numeric'} )}</span>                      <div className="d-flex flex-row justify-content-center mt-3">
                         <button
                           className="border-0 p-3 px-4"
                           style={{ background: "#ccc" }}
