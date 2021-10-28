@@ -42,6 +42,7 @@ export default function Torneos() {
     const [torneos, getTorneos] = useState(0);
     const [busqueda, setBusqueda]= useState('');
     var [array, setArrayBusqueda] = useState([]);
+    const [union, setUnion]= useState();
     const arrayBusqueda=[];
    
     
@@ -83,6 +84,7 @@ export default function Torneos() {
                     const userTorneo = {
                         Usuario: user[j].Nombre,
                         Torneo: torneos[i].Nombre,
+                        TorneoID: torneos[i].TorneoID,
                     }
                     arrayBusqueda.push(userTorneo);
                 }
@@ -106,14 +108,22 @@ export default function Torneos() {
     const buscador = (e) =>{
         e.preventDefault()
         if(!busqueda.trim()){
-            console.log('esta vacio');
+            window.alert("Ingrese su busqueda")
             return
         }
-        e.target.reset()
         filtrar(busqueda);
+      
     }
 
-   
+
+
+    const unirmeTorneo = (e) => {
+        window.alert('Te uniste exitosamente')
+        setUnion(e.target.value)
+    }
+
+
+   console.log(union)
 
     if (torneosDelUser.length === 1){
         axios.get(`http://127.0.0.1:3001/api/participantesxtorneo/${torneosDelUser[0].TorneoID}`)
@@ -141,7 +151,7 @@ export default function Torneos() {
                             className="form-control inputBuscar"
                             name="buscador"
                             value={busqueda}
-                            placeholder="Búsqueda por Usurio o Torneo"
+                            placeholder="Búsqueda por Usuario o Torneo"
                             onChange={(e) => setBusqueda(e.target.value)}
                         />
                         <button type="submit" className="btn btn-primary mt-2">Buscar</button>
@@ -153,6 +163,7 @@ export default function Torneos() {
                             <TableRow>
                                 <StyledTableCell>Usuario</StyledTableCell>
                                 <StyledTableCell>Torneo</StyledTableCell>
+                                <StyledTableCell></StyledTableCell>
                             </TableRow>
                             </TableHead>
                             <TableBody>
@@ -162,6 +173,9 @@ export default function Torneos() {
                                     {item.Usuario}
                                 </StyledTableCell>
                                 <StyledTableCell>{item.Torneo}</StyledTableCell>
+                                <StyledTableCell>
+                                <button className="btn btn-success mt-2" value={item.TorneoID} name="TorneoID" onClick={unirmeTorneo}>Unirme</button>
+                                </StyledTableCell>
                                 </StyledTableRow>
                             ))}
                             </TableBody>
@@ -234,7 +248,7 @@ export default function Torneos() {
                             className="form-control inputBuscar"
                             name="buscador"
                             value={busqueda}
-                            placeholder="Búsqueda por Usurio o Torneo"
+                            placeholder="Búsqueda por Usuario o Torneo"
                             onChange={(e) => setBusqueda(e.target.value)}
                         />
                         <button type="submit" className="btn btn-primary mt-2">Buscar</button>
@@ -246,6 +260,7 @@ export default function Torneos() {
                             <TableRow>
                                 <StyledTableCell>Usuario</StyledTableCell>
                                 <StyledTableCell>Torneo</StyledTableCell>
+                                <StyledTableCell></StyledTableCell>
                             </TableRow>
                             </TableHead>
                             <TableBody>
@@ -255,6 +270,9 @@ export default function Torneos() {
                                     {item.Usuario}
                                 </StyledTableCell>
                                 <StyledTableCell>{item.Torneo}</StyledTableCell>
+                                <StyledTableCell>
+                                <button className="btn btn-success mt-2" value={item.TorneoID} name="TorneoID" onClick={unirmeTorneo}>Unirme</button>
+                                </StyledTableCell>
                                 </StyledTableRow>
                             ))}
                             </TableBody>
