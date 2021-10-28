@@ -702,6 +702,47 @@ async function demo () {
 }
 demo()
 
+async function demo2 () {
+  const creaTabla2 = `
+    CREATE TABLE IF NOT EXISTS Variables2 (Usuario TEXT, TorneoID INTEGER, Puntos INTEGER);`
+  db.run(creaTabla2, function (err, result) {
+    if (err) {
+      return console.error(err.message)
+    }
+  })
+  await sleep(1000)
+  const insertTabla12 = `
+  INSERT INTO Variables2 (Usuario, TorneoID, Puntos) 
+  SELECT Usuario.Nombre, Torneo.TorneoID, SUM(Case Torneo.TorneoID > 1 when Prediccion.Matchday >= Torneo.FechaCreacion Then Puntos Else null End) AS Puntos
+  FROM  Usuario INNER JOIN Prediccion ON Usuario.UsuarioID = Prediccion.UsuarioID inner join Torneo on Usuario.UsuarioID = Torneo.UsuarioCreador
+  GROUP BY Usuario.UsuarioID;`
+  await sleep(1000)
+  db.run(insertTabla12, function (err, result) {
+    if (err) {
+      return console.error(err.message)
+    }
+  })
+
+  const insertTabla22 = `
+  INSERT INTO Ranking (Puntos, TorneoID, UsuarioID)
+  SELECT ifNull(Variables2.Puntos,0) AS Puntos, Variables2.TorneoID, Usuario.UsuarioID 
+  FROM Usuario LEFT JOIN Variables2 ON Usuario.Nombre = Variables2.Usuario;`
+  await sleep(1000)
+  db.run(insertTabla22, function (err, result) {
+    if (err) {
+      return console.error(err.message)
+    }
+  })
+  const eliminaTabla2 = `
+    DROP TABLE Variables2;`
+  db.run(eliminaTabla2, function (err, result) {
+    if (err) {
+      return console.error(err.message)
+    }
+  })
+}
+demo2()
+
 // ----------------------------------------------------------------------------
 
 // ----------------------------------Asigna puntos segun si le pegó o no------------------------------------------
