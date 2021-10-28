@@ -21,11 +21,6 @@ const Header = () => {
           </Link>
         </span>
         <span className="mx-3">
-          <Link to="/partidos" className="text-white text-decoration-none">
-            Partidos
-          </Link>
-        </span>
-        <span className="mx-3">
           <Link to="/predicciones" className="text-white text-decoration-none">
             Predicciones
           </Link>
