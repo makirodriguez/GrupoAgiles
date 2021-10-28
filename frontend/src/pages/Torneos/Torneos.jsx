@@ -58,6 +58,7 @@ export default function Torneos() {
         .then((response) => {
             const data = response.data.filter((item => item.UsuarioCreador === Number(localStorage.userID)));
             getTorneosUser(data)
+            console.log(response.data)
         })
         .catch(() => console.log("error"));
     }
@@ -116,14 +117,22 @@ export default function Torneos() {
     }
 
 
-
     const unirmeTorneo = (e) => {
-        window.alert('Te uniste exitosamente')
         setUnion(e.target.value)
+        axios
+        .post(`http://127.0.0.1:3001/api/rankings/`, {
+            Puntos: 0,
+            TorneoID: e.target.value, //el recien creado
+            UsuarioID: localStorage.userID
+        })
+        window.alert('Te uniste exitosamente')
+            
+
     }
 
 
-   console.log(union)
+   console.log(torneos)
+   
 
     if (torneosDelUser.length === 1){
         axios.get(`http://127.0.0.1:3001/api/participantesxtorneo/${torneosDelUser[0].TorneoID}`)
