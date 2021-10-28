@@ -1,6 +1,35 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+  
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
 
 
 export default function Torneos() {
@@ -11,11 +40,9 @@ export default function Torneos() {
         nombre: ''
     })
     const [torneos, getTorneos] = useState(0);
-    const [busqueda, setBusqueda]= useState(null);
+    const [busqueda, setBusqueda]= useState('');
     var [array, setArrayBusqueda] = useState([]);
-    var [array2, setArrayBusqueda2] = useState([]);
-
-    const arrayBusqueda = [];
+    const arrayBusqueda=[];
    
     
     useEffect(() => {
@@ -51,53 +78,40 @@ export default function Torneos() {
     }
     
         for(let i = 0; i<torneos.length; i++){
-            arrayBusqueda.push(torneos[i].Nombre);
+            for(let j = 0; j<user.length; j++){
+                if(torneos[i].UsuarioCreador == user[j].UsuarioID){
+                    const userTorneo = {
+                        Usuario: user[j].Nombre,
+                        Torneo: torneos[i].Nombre,
+                    }
+                    arrayBusqueda.push(userTorneo);
+                }
+            }
         }
-        for(let i = 0; i<user.length; i++){
-            arrayBusqueda.push(user[i].Nombre);
-        }
+        
 
         
     const filtrar=(terminoBusqueda)=>{
-         var resultadosBusqueda=user.filter((elemento)=>{
-          if((elemento.Nombre.toString().toLowerCase()).includes(terminoBusqueda.toLowerCase())){
-            return elemento.Nombre;
-          }
-        });
-
-        var resultadosBusqueda2=torneos.filter((elemento)=>{
-            if((elemento.Nombre.toString().toLowerCase()).includes(terminoBusqueda.toLowerCase())){
-              return elemento.Nombre;
-            }
-        });
-        //getUsuarios(resultadosBusqueda);
-        //return (<p>{resultadosBusqueda}</p>);
-        var array=resultadosBusqueda.find(e => {
-            if(e.Nombre.toLowerCase() === terminoBusqueda.toLowerCase()){
-                return e.Nombre;
-            }
-        });
-        var array2=resultadosBusqueda2.find(e => {
-            if(e.Nombre.toLowerCase() === terminoBusqueda.toLowerCase()){
-                return e.Nombre;
-            }
-        }); 
-
-        setArrayBusqueda(array);
-        setArrayBusqueda2(array2);
-      }
-
-      console.log('Usuarios:', array)
-      console.log('Torneos:', array2)
-
-
-
+         var resultadosBusqueda=arrayBusqueda.filter((elemento)=>{
+                if(((elemento.Usuario.toString().toLowerCase()).includes(terminoBusqueda.toLowerCase())) || 
+                (((elemento.Torneo).toString().toLowerCase()).includes(terminoBusqueda.toLowerCase())))
+                {
+                    return elemento;
+                }                      
+          }); 
+          setArrayBusqueda(resultadosBusqueda)
+        } 
      
 
-      const handleChange= (e) =>{
-        setBusqueda(e.target.value);
-        filtrar(e.target.value);
-      }
+    const buscador = (e) =>{
+        e.preventDefault()
+        if(!busqueda.trim()){
+            console.log('esta vacio');
+            return
+        }
+        e.target.reset()
+        filtrar(busqueda);
+    }
 
    
 
@@ -122,14 +136,38 @@ export default function Torneos() {
             <span className="h5">Hacete premium para poder crear mas torneos!</span>
             <div class="container">
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" onSubmit={buscador}>
                         <input
                             className="form-control inputBuscar"
+                            name="buscador"
                             value={busqueda}
                             placeholder="Búsqueda por Usurio o Torneo"
-                            onChange={handleChange}
+                            onChange={(e) => setBusqueda(e.target.value)}
                         />
+                        <button type="submit" className="btn btn-primary mt-2">Buscar</button>
                     </form>
+                   
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 5 }} aria-label="customized table">
+                            <TableHead>
+                            <TableRow>
+                                <StyledTableCell>Usuario</StyledTableCell>
+                                <StyledTableCell>Torneo</StyledTableCell>
+                            </TableRow>
+                            </TableHead>
+                            <TableBody>
+                            {array.map((item) => (
+                                <StyledTableRow>
+                                <StyledTableCell component="th" scope="row">
+                                    {item.Usuario}
+                                </StyledTableCell>
+                                <StyledTableCell>{item.Torneo}</StyledTableCell>
+                                </StyledTableRow>
+                            ))}
+                            </TableBody>
+                        </Table>
+                        </TableContainer>
+
                 </div>
             </div>
             </div>
@@ -189,19 +227,7 @@ export default function Torneos() {
              </div>
                 </form>
              </div>
-             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                <input
-                    className="form-control inputBuscar"
-                    value={busqueda}
-                    placeholder="Búsqueda por Usuario o Torneo"
-                    onChange={handleChange}    
-                />
-            </form>
-            <p>Resultados de la busqueda: </p>
-        
-            </div>
+             
             </div>
           );
     }
