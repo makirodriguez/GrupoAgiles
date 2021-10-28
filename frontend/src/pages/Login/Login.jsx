@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import { useEffect } from "react";
 
 function Copyright(props) {
   return (
@@ -31,6 +32,11 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
+
+  useEffect(() => {
+    localStorage.clear();
+  },[]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
