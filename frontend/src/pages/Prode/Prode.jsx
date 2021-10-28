@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { CircularProgress } from "@mui/material";
+import { textAlign } from "@mui/system";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -17,14 +18,18 @@ export default function Prode() {
       .get(`http://127.0.0.1:3001/api/predicciones`)
       .then((response) => {
         axios.get(`http://127.0.0.1:3001/api/partidos`).then((response1) => {
-          const dataMatchday = response1.data
-            .filter((item) => item.Score === null)
-            localStorage.Matchday = dataMatchday[0].Matchday
-            console.log(dataMatchday)
-            //Guarda cual es la próxima fecha para limitar los resultados para predecir.
+          const dataMatchday = response1.data.filter(
+            (item) => item.Score === null
+          );
+          localStorage.Matchday = dataMatchday[0].Matchday;
+          console.log(dataMatchday);
+          //Guarda cual es la próxima fecha para limitar los resultados para predecir.
           const data = response1.data
             .filter((item) => item.Score === null)
-            .filter((item) => item.Matchday === parseInt(localStorage.getItem("Matchday")))
+            .filter(
+              (item) =>
+                item.Matchday === parseInt(localStorage.getItem("Matchday"))
+            )
             .filter(
               (obj) =>
                 !response.data
@@ -32,7 +37,7 @@ export default function Prode() {
                   .map((a) => a.PartidoID)
                   .includes(obj.PartidoID)
             );
-            console.log(data)
+          console.log(data);
           setMatchs(data);
         });
       });
@@ -40,11 +45,21 @@ export default function Prode() {
   }, []);
   const sendResult = (pre) => {
     setLoading(true);
+    if (pre.GolesLocal > pre.GolesVisitante) {
+      pre.Resultado = "HOME_TEAM";
+    } else if (pre.GolesLocal < pre.GolesVisitante) {
+      pre.Resultado = "AWAY_TEAM";
+    } else {
+      pre.Resultado = "DRAW";
+    }
     axios
       .post("http://127.0.0.1:3001/api/predicciones", {
         UsuarioID: pre.UsuarioID,
         Resultado: pre.Resultado,
         PartidoID: pre.PartidoID,
+        GolesLocal: pre.GolesLocal,
+        GolesVisitante: pre.GolesVisitante,
+        Matchday: localStorage.Matchday,
       })
       .then(() => {
         console.log(matchs.filter((item) => item.Score === null));
@@ -64,7 +79,9 @@ export default function Prode() {
           <CircularProgress />
         ) : (
           <>
-            <h1 className="mt-3">Predicciones para la Fecha {localStorage.Matchday}</h1>
+            <h1 className="mt-3">
+              Predicciones para la Fecha {localStorage.Matchday}
+            </h1>
 
             {matchs?.map((match, index) => (
               <div
@@ -85,63 +102,70 @@ export default function Prode() {
                   className="w-100 d-flex flex-column align-items-center"
                   style={{ margin: "0 10rem" }}
                 >
-                  <span>{(new Date(match.UTCDATE)).toLocaleDateString('es-AR', {weekday: 'long', month: 'long', day: 'numeric'} )}</span>
-                  <span>{(new Date(match.UTCDATE)).toLocaleTimeString('es-AR',{hour: '2-digit', minute:'2-digit'})}</span>
+                  <span>
+                    {new Date(match.UTCDATE).toLocaleDateString("es-AR", {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                  <span>
+                    {new Date(match.UTCDATE).toLocaleTimeString("es-AR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
                   <div className="d-flex flex-row justify-content-center mt-3">
-                    <button
-                      onClick={() =>
+                    <input
+                      id="local"
+                      name="local"
+                      type="number"
+                      min="0"
+                      onChange={() =>
                         setPre({
                           ...pre,
                           PartidoID: match.PartidoID,
-                          Resultado: "HOME_TEAM",
+                          GolesLocal: document.getElementById("local").value,
                         })
                       }
-                      className={`border-0 p-3 mx-2 px-4 ${
-                        pre?.PartidoID === match?.PartidoID &&
-                        pre?.Resultado === "HOME_TEAM"
-                          ? "bg-success"
-                          : null
-                      }`}
+                      className={`col-xs-2 border-0 mx-2`}
+                      style={{
+                        width: "70px",
+                        background: "#ccc",
+                        "text-align": "center",
+                        padding: "16px",
+                        "padding-right": "2px",
+                      }}
+                    ></input>
+                    <button
+                      disabled
+                      className={`border-0 p-3 px-4 mx-2`}
                       style={{ background: "#ccc" }}
                     >
-                      L
+                      -
                     </button>
-                    <button
-                      className={`border-0 p-3 px-4 mx-2 ${
-                        pre?.PartidoID === match?.PartidoID &&
-                        pre?.Resultado === "DRAW"
-                          ? "bg-success"
-                          : null
-                      }`}
-                      onClick={() =>
+                    <input
+                      id="visitante"
+                      name="visitante"
+                      type="number"
+                      min="0"
+                      onChange={() =>
                         setPre({
                           ...pre,
                           PartidoID: match.PartidoID,
-                          Resultado: "DRAW",
+                          GolesVisitante:
+                            document.getElementById("visitante").value,
                         })
                       }
-                      style={{ background: "#ccc" }}
-                    >
-                      E
-                    </button>
-                    <button
-                      className={`border-0 p-3 px-4 mx-2 ${
-                        pre?.PartidoID === match?.PartidoID &&
-                        pre?.Resultado === "AWAY_TEAM"
-                          ? "bg-success"
-                          : null
-                      }`}
-                      onClick={() =>
-                        setPre({
-                          ...pre,
-                          PartidoID: match.PartidoID,
-                          Resultado: "AWAY_TEAM",
-                        })
-                      }
-                      style={{ background: "#ccc" }}
-                    >
-                      V
-                    </button>
+                      className={`col-xs-2 border-0 mx-2`}
+                      style={{
+                        width: "70px",
+                        background: "#ccc",
+                        "text-align": "center",
+                        padding: "16px",
+                        "padding-right": "2px",
+                      }}
+                    ></input>
                   </div>
                   {pre?.PartidoID === match?.PartidoID && (
                     <button
@@ -168,13 +192,16 @@ export default function Prode() {
         )}
       </div>
     );
-  }else{ 
-      return(
-        <div className="w-100 d-flex flex-column align-items-center">
-          <h1 className='mt-5' >Ya completaste tus predicciones para esta fecha</h1>
-          <h1 className='mt-1' >Esperamos tus proximas predicciones la fecha que viene!</h1>
-        </div>
-        )
-      
-    }
+  } else {
+    return (
+      <div className="w-100 d-flex flex-column align-items-center">
+        <h1 className="mt-5">
+          Ya completaste tus predicciones para esta fecha
+        </h1>
+        <h1 className="mt-1">
+          Esperamos tus proximas predicciones la fecha que viene!
+        </h1>
+      </div>
+    );
+  }
 }
