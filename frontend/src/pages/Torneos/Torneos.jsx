@@ -52,7 +52,7 @@ export default function Torneos() {
                 axios
                 .post(`http://127.0.0.1:3001/api/torneos/`, {
                   Nombre: datos.nombre,
-                  FechaCreacion: 4, //matchday actual CAMBIARLO
+                  FechaCreacion: localStorage.Matchday,
                   UsuarioCreador: localStorage.userID
                 })
                 .then((res) => {
@@ -67,9 +67,10 @@ export default function Torneos() {
 
                     })
                     .catch(() => console.log("error"));  
+                    window.location.reload(true)
                     window.alert(
-                    `Creado con exito`
-                  );
+                        `Creado con exito`
+                        );
                 })
                 .catch(() => console.log("error"));
             }
