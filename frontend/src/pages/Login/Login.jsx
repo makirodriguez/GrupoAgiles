@@ -9,6 +9,9 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+
 
 function Copyright(props) {
   return (
@@ -31,6 +34,22 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
+  const history = useHistory();
+
+  useEffect(() => {
+    localStorage.clear();
+  },[]);
+
+  function setMatchday(){
+    axios.get(`http://127.0.0.1:3001/api/partidos`).then((response1) => {
+          const dataMatchday = response1.data
+            .filter((item) => item.Score == null)
+            localStorage.Matchday = dataMatchday[0].Matchday
+            //console.log(dataMatchday)
+  })
+    .catch(() => console.log("error"));
+  }
+  setMatchday();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -70,6 +89,8 @@ export default function Login() {
                     window.alert(
                       `Ingresado con éxito. Bienvenido/a ${localStorage.nombre}`
                     );
+                    history.push("/prode");
+                    
                   })
                   .catch(() => console.log("error"));
               })
@@ -81,6 +102,7 @@ export default function Login() {
             window.alert(
               `Ingresado con éxito. Bienvenido/a ${localStorage.nombre}`
             );
+            history.push("/prode");
           }
         })
         .catch(() => console.log("error"));

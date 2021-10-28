@@ -85,7 +85,8 @@ export default function Prode() {
                   className="w-100 d-flex flex-column align-items-center"
                   style={{ margin: "0 10rem" }}
                 >
-                  <span>{match.UTCDATE}</span>
+                  <span>{(new Date(match.UTCDATE)).toLocaleDateString('es-AR', {weekday: 'long', month: 'long', day: 'numeric'} )}</span>
+                  <span>{(new Date(match.UTCDATE)).toLocaleTimeString('es-AR',{hour: '2-digit', minute:'2-digit'})}</span>
                   <div className="d-flex flex-row justify-content-center mt-3">
                     <button
                       onClick={() =>

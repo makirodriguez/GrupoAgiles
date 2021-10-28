@@ -262,7 +262,7 @@ app.get('/api/torneos', (req, res) => {
 })
 app.get('/api/rankings', (req, res) => {
   const sql =
-    'SELECT RankingID, Puntos, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID ORDER BY Ranking.Puntos DESC'
+    'SELECT DISTINCT RankingID, Ranking.Puntos, count(case when Prediccion.Puntos = 1 then 1 else null end) as Aciertos, count(case when Prediccion.Puntos = 0 then 1 else null end) as Fallos, count(case when Prediccion.Puntos = 3 then 1 else null end) as Perfect, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID INNER JOIN Prediccion on Usuario.UsuarioID = Prediccion.UsuarioID Group by Usuario.Nombre ORDER by Ranking.Puntos DESC'
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message)
@@ -325,10 +325,20 @@ app.get('/api/torneos/:id', (req, res) => {
     res.json(rows)
   })
 })
+app.get('/api/allTorneos/:id', (req, res) => {
+  const id = req.params.id
+  const sql = 'SELECT Torneo.TorneoID, Torneo.Nombre FROM Torneo inner join Ranking on Torneo.TorneoID = Ranking.TorneoID INNER JOIN Usuario on Usuario.UsuarioID = Ranking.UsuarioID WHERE Usuario.UsuarioID = ? GROUP by  Torneo.Nombre'
+  db.all(sql, id, (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
 app.get('/api/rankings/:id', (req, res) => {
   const id = req.params.id
   const sql =
-    'SELECT RankingID, Puntos, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID WHERE RankingID = ?'
+    'SELECT DISTINCT RankingID, Ranking.Puntos, count(case when Prediccion.Puntos = 1 then 1 else null end) as Aciertos, count(case when Prediccion.Puntos = 0 then 1 else null end) as Fallos, count(case when Prediccion.Puntos = 3 then 1 else null end) as Perfect, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID LEFT JOIN Prediccion on Usuario.UsuarioID = Prediccion.UsuarioID WHERE Torneo.TorneoID = ? Group by Usuario.Nombre ORDER by Ranking.Puntos DESC'
   db.all(sql, id, (err, rows) => {
     if (err) {
       return console.error(err.message)
