@@ -166,7 +166,7 @@ export default function Torneos() {
                             ))}
                             </TableBody>
                         </Table>
-                        </TableContainer>
+                    </TableContainer>
 
                 </div>
             </div>
@@ -207,7 +207,7 @@ export default function Torneos() {
             }
 
         return (
-            <div className="">
+            <div className="w-100 d-flex flex-column align-items-left">
               <div className="card d-flex flex-column">
                 <form className="row" onSubmit={enviarDatos}>
                 <div className="card-body">
@@ -227,6 +227,42 @@ export default function Torneos() {
              </div>
                 </form>
              </div>
+             <div className="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" onSubmit={buscador}>
+                        <input
+                            className="form-control inputBuscar"
+                            name="buscador"
+                            value={busqueda}
+                            placeholder="Búsqueda por Usurio o Torneo"
+                            onChange={(e) => setBusqueda(e.target.value)}
+                        />
+                        <button type="submit" className="btn btn-primary mt-2">Buscar</button>
+                    </form>
+                   
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 5 }} aria-label="customized table">
+                            <TableHead>
+                            <TableRow>
+                                <StyledTableCell>Usuario</StyledTableCell>
+                                <StyledTableCell>Torneo</StyledTableCell>
+                            </TableRow>
+                            </TableHead>
+                            <TableBody>
+                            {array.map((item) => (
+                                <StyledTableRow>
+                                <StyledTableCell component="th" scope="row">
+                                    {item.Usuario}
+                                </StyledTableCell>
+                                <StyledTableCell>{item.Torneo}</StyledTableCell>
+                                </StyledTableRow>
+                            ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+
+                </div>
+            </div>
              
             </div>
           );
