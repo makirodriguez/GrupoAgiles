@@ -222,6 +222,7 @@ export default function Torneos() {
 
                     })
                     .catch(() => console.log("error")); 
+                    window.location.reload(true);
                     window.alert(
                     `Creado con exito`
                   );
