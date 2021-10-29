@@ -34,6 +34,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 export default function Torneos() {
     const [torneosDelUser, getTorneosUser] = useState(0);
+    const [torneosUnidos, getTorneosUnidos] = useState(0);
     const [user, getUsuarios] = useState (0);
     const [participantes, getParticipantes] = useState(0);
     const [datos, setDatos] = useState({
@@ -44,13 +45,14 @@ export default function Torneos() {
     var [array, setArrayBusqueda] = useState([]);
     const [union, setUnion]= useState();
     const arrayBusqueda=[];
+    const arrayTorneosDelUser=[];
    
     
     useEffect(() => {
         getData();
         getUsers();
         getTorneo();
-       
+        getTorneosUnidosA();
     },[]);
     
     function getData(){
@@ -58,7 +60,14 @@ export default function Torneos() {
         .then((response) => {
             const data = response.data.filter((item => item.UsuarioCreador === Number(localStorage.userID)));
             getTorneosUser(data)
-            console.log(response.data)
+        })
+        .catch(() => console.log("error"));
+    }
+    function getTorneosUnidosA(){
+        axios.get(`http://127.0.0.1:3001/api/allTorneos/${localStorage.userID}`)
+        .then((response) => {
+            const data = response.data;
+            getTorneosUnidos(data)
         })
         .catch(() => console.log("error"));
     }
@@ -119,20 +128,25 @@ export default function Torneos() {
 
     const unirmeTorneo = (e) => {
         setUnion(e.target.value)
+        console.log(e.target.value)
         axios
         .post(`http://127.0.0.1:3001/api/rankings/`, {
             Puntos: 0,
-            TorneoID: e.target.value, //el recien creado
+            TorneoID: Number(e.target.value), //el recien creado
             UsuarioID: localStorage.userID
         })
-        window.alert('Te uniste exitosamente')
-            
-
+        .then((response)=>{
+            console.log(response)
+            window.location.reload(true);
+            window.alert('Te uniste exitosamente') 
+        })
+   
     }
 
-
-   console.log(torneos)
-   
+    for(let i = 0; i<torneosUnidos.length; i++){
+        arrayTorneosDelUser.push(torneosUnidos[i].TorneoID);
+    }
+    console.log(arrayTorneosDelUser)
 
     if (torneosDelUser.length === 1){
         axios.get(`http://127.0.0.1:3001/api/participantesxtorneo/${torneosDelUser[0].TorneoID}`)
@@ -183,7 +197,9 @@ export default function Torneos() {
                                 </StyledTableCell>
                                 <StyledTableCell>{item.Torneo}</StyledTableCell>
                                 <StyledTableCell>
-                                <button className="btn btn-success mt-2" value={item.TorneoID} name="TorneoID" onClick={unirmeTorneo}>Unirme</button>
+                                <button className={`btn ${
+                                    arrayTorneosDelUser.includes(item.TorneoID) ? "disabled" : "bg-success"
+                                } mt-2`} value={item.TorneoID} name="TorneoID" onClick={unirmeTorneo}>Unirme</button>
                                 </StyledTableCell>
                                 </StyledTableRow>
                             ))}
@@ -281,7 +297,9 @@ export default function Torneos() {
                                 </StyledTableCell>
                                 <StyledTableCell>{item.Torneo}</StyledTableCell>
                                 <StyledTableCell>
-                                <button className="btn btn-success mt-2" value={item.TorneoID} name="TorneoID" onClick={unirmeTorneo}>Unirme</button>
+                                <button value={item.TorneoID} className={`btn ${
+                                    arrayTorneosDelUser.includes(item.TorneoID) ? "disabled" : "bg-success"
+                                } mt-2`} name="TorneoID" onClick={unirmeTorneo} >Unirme</button>
                                 </StyledTableCell>
                                 </StyledTableRow>
                             ))}
