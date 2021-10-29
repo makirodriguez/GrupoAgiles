@@ -108,7 +108,14 @@ export default function Predicciones() {
               <div className="w-100 d-flex flex-column align-items-center">
                 <span className="h1"></span>
                 <div
-                  className="d-flex flex-row w-100"
+                  className={`d-flex flex-row w-100 ${
+                    prediccion.Resultado === prediccion.Score && "bg-success"
+                  } ${
+                    prediccion.Resultado !== prediccion.Score &&
+                    prediccion.Resultado && prediccion.Score
+                      ? "bg-danger"
+                      : ""
+                  }`}
                   style={{
                     padding: "2rem 20rem",
                     backgroundColor: "#f2f2f2",
