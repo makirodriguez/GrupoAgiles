@@ -273,7 +273,7 @@ app.get("/api/torneos", (req, res) => {
 });
 app.get("/api/rankings", (req, res) => {
   const sql =
-    "SELECT DISTINCT RankingID, Ranking.Puntos, count(case when Prediccion.Puntos = 1 then 1 else null end) as Aciertos, count(case when Prediccion.Puntos = 0 then 1 else null end) as Fallos, count(case when Prediccion.Puntos = 3 then 1 else null end) as Perfect, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID INNER JOIN Prediccion on Usuario.UsuarioID = Prediccion.UsuarioID Group by Usuario.Nombre ORDER by Ranking.Puntos DESC";
+    'SELECT RankingID, Ranking.Puntos, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID ORDER by Ranking.Puntos DESC'
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message);
@@ -333,13 +333,12 @@ app.get("/api/torneos/:id", (req, res) => {
     if (err) {
       return console.error(err.message);
     }
-    res.json(rows);
-  });
-});
-app.get("/api/allTorneos/:id", (req, res) => {
-  const id = req.params.id;
-  const sql =
-    "SELECT Torneo.TorneoID, Torneo.Nombre FROM Torneo inner join Ranking on Torneo.TorneoID = Ranking.TorneoID INNER JOIN Usuario on Usuario.UsuarioID = Ranking.UsuarioID WHERE Usuario.UsuarioID = ? GROUP by  Torneo.Nombre";
+    res.json(rows)
+  })
+})
+app.get('/api/allTorneos/:id', (req, res) => {
+  const id = req.params.id
+  const sql = 'SELECT Torneo.TorneoID, Torneo.Nombre FROM Torneo inner join Ranking on Torneo.TorneoID = Ranking.TorneoID INNER JOIN Usuario on Usuario.UsuarioID = Ranking.UsuarioID WHERE Usuario.UsuarioID = ? GROUP by Torneo.TorneoID'
   db.all(sql, id, (err, rows) => {
     if (err) {
       return console.error(err.message);
@@ -731,6 +730,48 @@ async function demo() {
   });
 }
 demo();
+
+async function demo2 () {
+  const creaTabla2 = `
+    CREATE TABLE IF NOT EXISTS Variables2 (UsuarioID INTEGER, TorneoID INTEGER, Puntos INTEGER);`
+  db.run(creaTabla2, function (err, result) {
+    if (err) {
+      return console.error(err.message)
+    }
+  })
+  await sleep(1000)
+  const insertTabla12 = `
+  INSERT INTO Variables2 (UsuarioID, TorneoID, Puntos) 
+  SELECT Usuario.UsuarioID, Torneo.TorneoID, SUM(Case when Prediccion.Matchday >= Torneo.FechaCreacion Then Puntos Else null End) AS Puntos
+  FROM Usuario INNER JOIN Prediccion ON Usuario.UsuarioID = Prediccion.UsuarioID inner join Torneo on Usuario.UsuarioID = Torneo.UsuarioCreador
+  GROUP BY Usuario.UsuarioID;`
+  await sleep(1000)
+  db.run(insertTabla12, function (err, result) {
+    if (err) {
+      return console.error(err.message)
+    }
+  })
+
+  const insertTabla22 = `
+  INSERT OR REPLACE INTO Ranking (RankingID, Puntos, TorneoID, UsuarioID)
+  SELECT Ranking.RankingID, ifNull(Variables2.Puntos,0) AS Puntos, Variables2.TorneoID, Variables2.UsuarioID
+  From Ranking inner JOIN Variables2 ON (Ranking.TorneoID = Variables2.TorneoID and Ranking.UsuarioID = Variables2.UsuarioID)
+  where Variables2.TorneoID > 1`
+  await sleep(1000)
+  db.run(insertTabla22, function (err, result) {
+    if (err) {
+      return console.error(err.message)
+    }
+  })
+  const eliminaTabla2 = `
+    DROP TABLE Variables2;`
+  db.run(eliminaTabla2, function (err, result) {
+    if (err) {
+      return console.error(err.message)
+    }
+  })
+}
+demo2()
 
 // ----------------------------------------------------------------------------
 
