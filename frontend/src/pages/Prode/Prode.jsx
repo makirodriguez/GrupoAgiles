@@ -201,21 +201,22 @@ export default function Prode() {
                     className="w-100 d-flex flex-column align-items-center"
                     style={{ margin: "0 10rem" }}
                   >
-                 <span>
-                    {new Date(match.UTCDATE).toLocaleDateString("es-AR", {
-                      weekday: "long",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </span>
-                  <span>
-                    {new Date(match.UTCDATE).toLocaleTimeString("es-AR", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
+                    <span>
+                      {new Date(match.UTCDATE).toLocaleDateString("es-AR", {
+                        weekday: "long",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </span>
+                    <span>
+                      {new Date(match.UTCDATE).toLocaleTimeString("es-AR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
                     <div className="d-flex flex-row justify-content-center mt-3">
                       <input
+                        defaultValue="0"
                         id="local"
                         name="local"
                         type="number"
@@ -244,6 +245,7 @@ export default function Prode() {
                         -
                       </button>
                       <input
+                        defaultValue="0"
                         id="visitante"
                         name="visitante"
                         type="number"
@@ -265,7 +267,7 @@ export default function Prode() {
                           "padding-right": "2px",
                         }}
                       ></input>
-                     </div>
+                    </div>
                     {pre?.PartidoID === match?.PartidoID && (
                       <button
                         onClick={() => sendResult(pre)}
