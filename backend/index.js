@@ -704,7 +704,7 @@ demo()
 
 async function demo2 () {
   const creaTabla2 = `
-    CREATE TABLE IF NOT EXISTS Variables2 (Usuario TEXT, TorneoID INTEGER, Puntos INTEGER);`
+    CREATE TABLE IF NOT EXISTS Variables2 (UsuarioID INTEGER, TorneoID INTEGER, Puntos INTEGER);`
   db.run(creaTabla2, function (err, result) {
     if (err) {
       return console.error(err.message)
@@ -712,9 +712,9 @@ async function demo2 () {
   })
   await sleep(1000)
   const insertTabla12 = `
-  INSERT INTO Variables2 (Usuario, TorneoID, Puntos) 
-  SELECT Usuario.Nombre, Torneo.TorneoID, SUM(Case Torneo.TorneoID > 1 when Prediccion.Matchday >= Torneo.FechaCreacion Then Puntos Else null End) AS Puntos
-  FROM  Usuario INNER JOIN Prediccion ON Usuario.UsuarioID = Prediccion.UsuarioID inner join Torneo on Usuario.UsuarioID = Torneo.UsuarioCreador
+  INSERT INTO Variables2 (UsuarioID, TorneoID, Puntos) 
+  SELECT Usuario.UsuarioID, Torneo.TorneoID, SUM(Case when Prediccion.Matchday >= Torneo.FechaCreacion Then Puntos Else null End) AS Puntos
+  FROM Usuario INNER JOIN Prediccion ON Usuario.UsuarioID = Prediccion.UsuarioID inner join Torneo on Usuario.UsuarioID = Torneo.UsuarioCreador
   GROUP BY Usuario.UsuarioID;`
   await sleep(1000)
   db.run(insertTabla12, function (err, result) {
@@ -724,9 +724,10 @@ async function demo2 () {
   })
 
   const insertTabla22 = `
-  INSERT INTO Ranking (Puntos, TorneoID, UsuarioID)
-  SELECT ifNull(Variables2.Puntos,0) AS Puntos, Variables2.TorneoID, Usuario.UsuarioID 
-  FROM Usuario LEFT JOIN Variables2 ON Usuario.Nombre = Variables2.Usuario;`
+  INSERT OR REPLACE INTO Ranking (RankingID, Puntos, TorneoID, UsuarioID)
+  SELECT Ranking.RankingID, ifNull(Variables2.Puntos,0) AS Puntos, Variables2.TorneoID, Variables2.UsuarioID
+  From Ranking inner JOIN Variables2 ON (Ranking.TorneoID = Variables2.TorneoID and Ranking.UsuarioID = Variables2.UsuarioID)
+  where Variables2.TorneoID > 1`
   await sleep(1000)
   db.run(insertTabla22, function (err, result) {
     if (err) {
