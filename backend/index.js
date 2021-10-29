@@ -191,6 +191,16 @@ app.get('/api/participantesxtorneo/:id', (req, res) => {
 
 // --------------------------- GET all -------------------------------
 
+app.get('/api/allpartidosterminados', (req, res) => {
+  const sql =
+    'SELECT * FROM Partido inner join Equipo on Equipo.EquipoID = Partido.LocalID inner join Equipo a on a.EquipoID = Partido.VisitanteID WHERE Partido.Score is not null ORDER BY UTCDATE desc'
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
 app.get('/api/partidosterminados', (req, res) => {
   const sql =
     'SELECT PartidoID, Matchday, UTCDATE, GolesLocal, GolesVisit, Score, Equipo.Nombre Local, Equipo.ImgPath LocalPath, a.Nombre Visitante, a.ImgPath VisitantePath FROM Partido inner join Equipo on Equipo.EquipoID = Partido.LocalID inner join Equipo a on a.EquipoID = Partido.VisitanteID WHERE Partido.Score is not null ORDER BY UTCDATE desc LIMIT 16'
@@ -203,7 +213,7 @@ app.get('/api/partidosterminados', (req, res) => {
 })
 app.get('/api/partidos', (req, res) => {
   const sql =
-    'SELECT PartidoID, Matchday, UTCDATE, GolesLocal, GolesVisit, Score, Equipo.Nombre Local, Equipo.ImgPath LocalPath, a.Nombre Visitante, a.ImgPath VisitantePath FROM Partido inner join Equipo on Equipo.EquipoID = Partido.LocalID inner join Equipo a on a.EquipoID = Partido.VisitanteID ORDER BY UTCDATE'
+    'SELECT PartidoID, LocalID, VisitanteID, Matchday, UTCDATE, GolesLocal, GolesVisit, Score, Equipo.Nombre Local, Equipo.ImgPath LocalPath, a.Nombre Visitante, a.ImgPath VisitantePath FROM Partido inner join Equipo on Equipo.EquipoID = Partido.LocalID inner join Equipo a on a.EquipoID = Partido.VisitanteID ORDER BY UTCDATE'
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message)

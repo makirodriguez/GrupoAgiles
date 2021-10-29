@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 export default function Predicciones() {
   const [prediccion, getPrediccion] = useState(0);
   const [partidos, getPartidos] = useState(0);
-  const [match, setMatchs] = useState(0);
+  const [match, setMatchs] = useState(1);
   const prediccionPorUsuario = [];
   const matchs = [];
   const partidosYPredicciones = [];
@@ -92,9 +92,10 @@ export default function Predicciones() {
         className="custom-select my-1 mr-2"
         id="inlineFormCustomSelect"
         name="Matchday"
+        value={match}
         onChange={handleChange}
       >
-        <option default>Seleccione una fecha</option>
+        <option default disabled>Seleccione una fecha</option>
         {matchs.map((i) => (
           <option value={i}>Fecha {[i]}</option>
         ))}
