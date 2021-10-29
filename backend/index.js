@@ -272,7 +272,7 @@ app.get('/api/torneos', (req, res) => {
 })
 app.get('/api/rankings', (req, res) => {
   const sql =
-    'SELECT DISTINCT RankingID, Ranking.Puntos, count(case when Prediccion.Puntos = 1 then 1 else null end) as Aciertos, count(case when Prediccion.Puntos = 0 then 1 else null end) as Fallos, count(case when Prediccion.Puntos = 3 then 1 else null end) as Perfect, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID INNER JOIN Prediccion on Usuario.UsuarioID = Prediccion.UsuarioID Group by Usuario.Nombre ORDER by Ranking.Puntos DESC'
+    'SELECT RankingID, Ranking.Puntos, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID ORDER by Ranking.Puntos DESC'
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message)
@@ -337,7 +337,7 @@ app.get('/api/torneos/:id', (req, res) => {
 })
 app.get('/api/allTorneos/:id', (req, res) => {
   const id = req.params.id
-  const sql = 'SELECT Torneo.TorneoID, Torneo.Nombre FROM Torneo inner join Ranking on Torneo.TorneoID = Ranking.TorneoID INNER JOIN Usuario on Usuario.UsuarioID = Ranking.UsuarioID WHERE Usuario.UsuarioID = ? GROUP by  Torneo.Nombre'
+  const sql = 'SELECT Torneo.TorneoID, Torneo.Nombre FROM Torneo inner join Ranking on Torneo.TorneoID = Ranking.TorneoID INNER JOIN Usuario on Usuario.UsuarioID = Ranking.UsuarioID WHERE Usuario.UsuarioID = ? GROUP by Torneo.TorneoID'
   db.all(sql, id, (err, rows) => {
     if (err) {
       return console.error(err.message)
