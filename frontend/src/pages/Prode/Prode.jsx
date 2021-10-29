@@ -12,8 +12,14 @@ export default function Prode() {
   });
   const [loading, setLoading] = useState(false);
   const [matchs, setMatchs] = useState([]);
+  const [matchsFinish, setMatchsFinish] = useState([]);
   useEffect(async () => {
     setLoading(true);
+    await axios
+      .get(`http://127.0.0.1:3001/api/allpartidosterminados`)
+      .then((res) => {
+        setMatchsFinish(res.data);
+      });
     await axios
       .get(`http://127.0.0.1:3001/api/predicciones`)
       .then((response) => {
@@ -39,6 +45,7 @@ export default function Prode() {
             );
           console.log(data);
           setMatchs(data);
+          /* console.log(data); */
         });
       });
     setLoading(false);
@@ -71,7 +78,6 @@ export default function Prode() {
         setLoading(false);
       });
   };
-
   if (matchs.length > 0) {
     return (
       <div className="w-100 d-flex flex-column align-items-center">
@@ -83,26 +89,119 @@ export default function Prode() {
               Predicciones para la Fecha {localStorage.Matchday}
             </h1>
 
-            {matchs?.map((match, index) => (
-              <div
-                key={index}
-                className="d-flex flex-row w-100 my-3 w-100 justify-content-around"
-                style={{ padding: "2rem 28rem", backgroundColor: "#f2f2f2" }}
-              >
-                <div className="d-flex flex-column justify-content-center align-items-center">
-                  <img
-                    src={match.LocalPath}
-                    width="60px"
-                    height="60px"
-                    alt="psg-logo"
-                  />
-                  <span>{match.Local}</span>
-                </div>
+            {matchs?.map((match, index) => {
+              const local = [];
+              const visitante = [];
+              matchsFinish
+                ?.filter(
+                  (as) =>
+                    as.LocalID === match.LocalID ||
+                    as.VisitanteID === match.LocalID
+                )
+                .reverse()
+                .forEach((element) => {
+                  if (element.LocalID === match.LocalID) {
+                    switch (element.Score) {
+                      case "HOME_TEAM":
+                        local.push("WIN");
+                        break;
+                      case "AWAY_TEAM":
+                        local.push("LOSE");
+                        break;
+                      default:
+                        local.push("DRAW");
+                        break;
+                    }
+                  } else {
+                    switch (element.Score) {
+                      case "HOME_TEAM":
+                        local.push("LOSE");
+                        break;
+                      case "AWAY_TEAM":
+                        local.push("WIN");
+                        break;
+                      default:
+                        local.push("DRAW");
+                        break;
+                    }
+                  }
+                });
+              matchsFinish
+                ?.filter(
+                  (as) =>
+                    as.LocalID === match.VisitanteID ||
+                    as.VisitanteID === match.VisitanteID
+                )
+                .reverse()
+                .forEach((element) => {
+                  if (element.VisitanteID === match.VisitanteID) {
+                    switch (element.Score) {
+                      case "HOME_TEAM":
+                        visitante.push("LOSE");
+                        break;
+                      case "AWAY_TEAM":
+                        visitante.push("WIN");
+                        break;
+                      default:
+                        visitante.push("DRAW");
+                        break;
+                    }
+                  } else {
+                    switch (element.Score) {
+                      case "HOME_TEAM":
+                        visitante.push("WIN");
+                        break;
+                      case "AWAY_TEAM":
+                        visitante.push("LOSE");
+                        break;
+                      default:
+                        visitante.push("DRAW");
+                        break;
+                    }
+                  }
+                });
+              console.log(visitante);
+              return (
                 <div
-                  className="w-100 d-flex flex-column align-items-center"
-                  style={{ margin: "0 10rem" }}
+                  key={index}
+                  className="d-flex flex-row w-100 my-3 w-100 justify-content-around"
+                  style={{ padding: "2rem 28rem", backgroundColor: "#f2f2f2" }}
                 >
-                  <span>
+                  <div className="d-flex flex-column justify-content-center align-items-center">
+                    <img
+                      src={match.LocalPath}
+                      width="60px"
+                      height="60px"
+                      alt="psg-logo"
+                    />
+                    <span>{match.Local}</span>
+                    <div className="d-flex flex-row mx-2 justify-content-lg-around">
+                      {local?.map((a) => (
+                        <>
+                          {a === "LOSE" && (
+                            <div className="p-2 px-3 bg-danger text-white mx-1  mt-2">
+                              L
+                            </div>
+                          )}{" "}
+                          {a === "WIN" && (
+                            <div className="p-2 px-3 bg-success text-white mx-1  mt-2">
+                              W
+                            </div>
+                          )}
+                          {a === "DRAW" && (
+                            <div className="p-2 px-3 bg-warning text-white mx-1  mt-2">
+                              D
+                            </div>
+                          )}
+                        </>
+                      ))}
+                    </div>
+                  </div>
+                  <div
+                    className="w-100 d-flex flex-column align-items-center"
+                    style={{ margin: "0 10rem" }}
+                  >
+                 <span>
                     {new Date(match.UTCDATE).toLocaleDateString("es-AR", {
                       weekday: "long",
                       month: "long",
@@ -115,79 +214,125 @@ export default function Prode() {
                       minute: "2-digit",
                     })}
                   </span>
-                  <div className="d-flex flex-row justify-content-center mt-3">
-                    <input
-                      id="local"
-                      name="local"
-                      type="number"
-                      min="0"
-                      onChange={() =>
-                        setPre({
-                          ...pre,
-                          PartidoID: match.PartidoID,
-                          GolesLocal: document.getElementById("local").value,
-                        })
-                      }
-                      className={`col-xs-2 border-0 mx-2`}
-                      style={{
-                        width: "70px",
-                        background: "#ccc",
-                        "text-align": "center",
-                        padding: "16px",
-                        "padding-right": "2px",
-                      }}
-                    ></input>
-                    <button
-                      disabled
-                      className={`border-0 p-3 px-4 mx-2`}
-                      style={{ background: "#ccc" }}
-                    >
-                      -
-                    </button>
-                    <input
-                      id="visitante"
-                      name="visitante"
-                      type="number"
-                      min="0"
-                      onChange={() =>
-                        setPre({
-                          ...pre,
-                          PartidoID: match.PartidoID,
-                          GolesVisitante:
-                            document.getElementById("visitante").value,
-                        })
-                      }
-                      className={`col-xs-2 border-0 mx-2`}
-                      style={{
-                        width: "70px",
-                        background: "#ccc",
-                        "text-align": "center",
-                        padding: "16px",
-                        "padding-right": "2px",
-                      }}
-                    ></input>
+                    <div className="d-flex flex-row justify-content-center mt-3">
+                      <input
+                        id="local"
+                        name="local"
+                        type="number"
+                        min="0"
+                        onChange={() =>
+                          setPre({
+                            ...pre,
+                            PartidoID: match.PartidoID,
+                            GolesLocal: document.getElementById("local").value,
+                          })
+                        }
+                        className={`col-xs-2 border-0 mx-2`}
+                        style={{
+                          width: "70px",
+                          background: "#ccc",
+                          "text-align": "center",
+                          padding: "16px",
+                          "padding-right": "2px",
+                        }}
+                      ></input>
+                      <button
+                        disabled
+                        className={`border-0 p-3 px-4 mx-2`}
+                        style={{ background: "#ccc" }}
+                      >
+                        -
+                      </button>
+                      <input
+                        id="visitante"
+                        name="visitante"
+                        type="number"
+                        min="0"
+                        onChange={() =>
+                          setPre({
+                            ...pre,
+                            PartidoID: match.PartidoID,
+                            GolesVisitante:
+                              document.getElementById("visitante").value,
+                          })
+                        }
+                        className={`col-xs-2 border-0 mx-2`}
+                        style={{
+                          width: "70px",
+                          background: "#ccc",
+                          "text-align": "center",
+                          padding: "16px",
+                          "padding-right": "2px",
+                        }}
+                      ></input>
+                     </div>
+                    {pre?.PartidoID === match?.PartidoID && (
+                      <button
+                        onClick={() => sendResult(pre)}
+                        className="border-0 p-3 px-4 mt-3"
+                        style={{ background: "#ccc" }}
+                      >
+                        Enviar
+                      </button>
+                    )}
                   </div>
-                  {pre?.PartidoID === match?.PartidoID && (
-                    <button
-                      onClick={() => sendResult(pre)}
-                      className="border-0 p-3 px-4 mt-3"
-                      style={{ background: "#ccc" }}
-                    >
-                      Enviar
-                    </button>
-                  )}
+                  <div className="d-flex flex-column justify-content-center align-items-center">
+                    <img
+                      src={match.VisitantePath}
+                      width="60px"
+                      height="60px"
+                      alt="psg-logo"
+                    />
+                    <span>{match.Visitante}</span>
+                    <div className="d-flex flex-row mx-2 justify-content-lg-around">
+                      {visitante?.map((a) => (
+                        <>
+                          {a === "LOSE" && (
+                            <div className="p-2 px-3 bg-danger text-white mx-1  mt-2">
+                              L
+                            </div>
+                          )}{" "}
+                          {a === "WIN" && (
+                            <div className="p-2 px-3 bg-success text-white mx-1  mt-2">
+                              W
+                            </div>
+                          )}
+                          {a === "DRAW" && (
+                            <div className="p-2 px-3 bg-warning text-white mx-1  mt-2">
+                              D
+                            </div>
+                          )}
+                        </>
+                      ))}
+                      {/* {visitante?.map(
+                        (a) =>
+                          a === "LOSE" && (
+                            <div className="p-2 px-3 bg-danger text-white mx-1  mt-2">
+                              L
+                            </div>
+                          )
+                      )}
+                      {visitante?.map(
+                        (a) =>
+                          a === "WIN" && (
+                            <div className="p-2 px-3 bg-success text-white mx-1 mt-2">
+                              W
+                            </div>
+                          )
+                      )}
+                      {visitante?.map(
+                        (a) =>
+                          a === "DRAW" && (
+                            <div className="p-2 px-3 bg-warning text-white mx-1 mt-2">
+                              D
+                            </div>
+                          )
+                      )} */}
+                    </div>
+                  </div>
                 </div>
-                <div className="d-flex flex-column justify-content-center align-items-center">
-                  <img
-                    src={match.VisitantePath}
-                    width="60px"
-                    height="60px"
-                    alt="psg-logo"
-                  />
-                  <span>{match.Visitante}</span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </>
         )}
       </div>
