@@ -95,7 +95,9 @@ export default function Predicciones() {
         value={match}
         onChange={handleChange}
       >
-        <option default disabled>Seleccione una fecha</option>
+        <option default disabled>
+          Seleccione una fecha
+        </option>
         {matchs.map((i) => (
           <option value={i}>Fecha {[i]}</option>
         ))}
@@ -112,7 +114,8 @@ export default function Predicciones() {
                     prediccion.Resultado === prediccion.Score && "bg-success"
                   } ${
                     prediccion.Resultado !== prediccion.Score &&
-                    prediccion.Resultado && prediccion.Score
+                    prediccion.Resultado &&
+                    prediccion.Score
                       ? "bg-danger"
                       : ""
                   }`}
@@ -164,8 +167,12 @@ export default function Predicciones() {
                       </button>
                     </div>
                     <span className="text-center">Tu prediccion:</span>
-                    <span style={{ fontWeight: "bold" }}>
+                    <span style={{ fontWeight: "bold", textAlign: "center" }}>
                       {text[prediccion.Resultado]}
+                      <br />
+                      {prediccion.GolesLocalPredichos}
+                      {"-"}
+                      {prediccion.GolesVisitante}
                     </span>
                   </div>
                   <div className="d-flex flex-column justify-content-center align-items-center">
