@@ -52,6 +52,12 @@ export default function Prode() {
   }, []);
   const sendResult = (pre) => {
     setLoading(true);
+    if (pre.GolesLocal == null) {
+      pre.GolesLocal = 0;
+    }
+    if (pre.GolesVisitante == null) {
+      pre.GolesVisitante = 0;
+    }
     if (pre.GolesLocal > pre.GolesVisitante) {
       pre.Resultado = "HOME_TEAM";
     } else if (pre.GolesLocal < pre.GolesVisitante) {
