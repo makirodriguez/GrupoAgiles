@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import logo from "./icon.png";
+import {LogoutButton} from "../../pages/Logout/Logout";
 
 const Header = () => {
   return (
@@ -41,8 +42,8 @@ const Header = () => {
           </Link>
         </span>
         <span className="mx-3">
-          <Link to="/" className="text-white text-decoration-none">
-            Login
+          <Link to="/login" className="text-white text-decoration-none">
+          <LogoutButton/>
           </Link>
         </span>
       </div>
