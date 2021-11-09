@@ -1,20 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Auth0Provider} from '@auth0/auth0-react';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router} from "react-router-dom";
+import {Auth0ProviderWithHistory} from './helpers/Auth0ProviderWithHistory'
+import AuthenticationButton from './components/authentication-button'
 
-const url='http://localhost:3000/login';
+
 
 ReactDOM.render(
-    <Auth0Provider
-    domain="dev-s24evrct.us.auth0.com"
-    clientId="62eGWhkXlfDidOnfsCIgOk7wGalRpxGi"
-    redirectUri={url}
-    >
-    <App />
-    </Auth0Provider>,
+ 
+  <Router>
+  <Auth0ProviderWithHistory>
+ 
+    <App auth={AuthenticationButton}/>
+
+  </Auth0ProviderWithHistory>
+</Router>,
+    
   document.getElementById('root')
 );
 

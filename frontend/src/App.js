@@ -1,10 +1,9 @@
-import { useHistory, Router, Switch, Route, Redirect } from "react-router-dom";
+import {Router, Switch, Route, Redirect } from "react-router-dom";
 import Header from "./components/Header/Header";
 import history from "./helpers/history";
 import Home from "./pages/Home/Home";
 import Ranking from "./pages/Ranking/Ranking";
 import Prode from "./pages/Prode/Prode";
-import {LoginButton} from "./pages/Login/Login";
 import Predicciones from "./pages/Predicciones/Predicciones";
 import {Perfil} from "./pages/Perfil/Perfil";
 import Torneos from "./pages/Torneos/Torneos";
@@ -13,18 +12,17 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { useEffect } from "react";
 
-//import { useHistory } from "react-router-dom";
 
 
 
 function App() {
-  
+
   const {isAuthenticated, user} = useAuth0();
-  //const history = useHistory();  
+ 
   useEffect(() => {
     localStorage.clear();
   }, []);
-  if (isAuthenticated === true){
+  if (isAuthenticated == true){
     
     console.log(user)
     function setMatchday() {
@@ -52,7 +50,7 @@ function App() {
             }
           )
           .then((res) => {
-            console.log(res)
+            
             // si length = 0 no existe el usuario, lo creo:
             if (res.data.length === 0) {
               axios
@@ -82,33 +80,41 @@ function App() {
    
   }
 
-  return (
-    <div className="App">   
-      {isAuthenticated ? <> 
-        <Router history={history}>
-        <Header />
-        
-        <div className="">
-          <Switch>
-            {/* <Route path="/" exact component={Login} /> */}
-            <Route path="/home" exact component={Home} />
-            <Route path="/ranking" exact component={Ranking} />
-            <Route path="/prode" exact component={Prode} />
-            <Route path="/predicciones" exact component={Predicciones} />
-            <Route path="/torneos" exact component={Torneos} />
-            <Route path="/perfil" exact component={Perfil} />
-            <Route path="*">
-               <Redirect to="/home" /> 
-            </Route>
-          </Switch>
-        </div>
-        </Router>
-      </>
-      :
-      <LoginButton/>
-      }
+  return ( 
+   
+  
+    <div> 
+      <Router history={history} >
+      
+      <Header />
+      
+       <div className="">
+       <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/ranking" exact component={Ranking} />
+        <Route path="/prode" exact component={Prode} />
+        <Route path="/predicciones" exact component={Predicciones} />
+        <Route path="/torneos" exact component={Torneos} />
+        <Route path="/perfil" exact component={Perfil} />
+        {/*  <Route path="*">
+           <Redirect to="/" /> 
+        </Route>  */}
+      </Switch>   
+   
+    </div>      
+   
+    
+  
 
-    </div>
+     </Router>
+ </div>
+     
+  
+
+
+
+    
+      
   );
 }
 

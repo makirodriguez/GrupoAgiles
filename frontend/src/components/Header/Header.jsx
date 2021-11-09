@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import logo from "./icon.png";
 import {LogoutButton} from "../../pages/Logout/Logout";
+import AuthNav from '../auth-nav';
+
 
 const Header = () => {
   return (
@@ -11,8 +13,9 @@ const Header = () => {
         </Link>
       </div>
       <div className="p-5" style={{ marginLeft: "auto" }}>
+      
         <span className="mx-3">
-          <Link to="/home" className="text-white text-decoration-none">
+          <Link to="/" className="text-white text-decoration-none">
             Home
           </Link>
         </span>
@@ -43,9 +46,9 @@ const Header = () => {
         </span>
         <span className="mx-3">
           <Link to="/login" className="text-white text-decoration-none">
-          <LogoutButton/>
+          <AuthNav />
           </Link>
-        </span>
+        </span> 
       </div>
     </div>
   );
