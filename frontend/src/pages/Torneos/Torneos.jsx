@@ -99,7 +99,12 @@ export default function Torneos() {
         })
         .catch(() => console.log("error"));
     }
-    
+    function aceptarSolicitud(id){
+        console.log("acepta" + id);
+    }
+    function rechazarSolicitud(id){
+        console.log("rechaza" + id);
+    }
         for(let i = 0; i<torneos.length; i++){
             for(let j = 0; j<user.length; j++){
                 if(torneos[i].UsuarioCreador == user[j].UsuarioID){
@@ -201,9 +206,20 @@ export default function Torneos() {
                 <h5 className="card-title">Nombre del torneo:</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{torneosDelUser[0].Nombre}</h6>
                 <p className="card-text">Participantes: {participantes}</p>
-                <p className="card-text">Solicitudes: {arraySolicitudes.map(
-                    each=>each.Nombre
-                )}</p>
+                <div className={`px-2 w-75 d-flex flex-column align-items-center ${
+                    arraySolicitudes.length===0 ? "hide" : null
+                }`}>
+                {arraySolicitudes.map(function(each){
+                    return(
+                        <div className="align-items-center justify-content-center">
+                            {each.Nombre}
+                            <button type="submit" className="btn btn-secondary mx-2" onClick={()=>aceptarSolicitud(each.SolicitudID)}>Aceptar</button>
+                            <button type="submit" className="btn btn-secondary mx-2" onClick={()=>rechazarSolicitud(each.SolicitudID)}>Rechazar</button>
+                        </div>
+                    )
+                })
+                }
+                </div>
                 <a href="/ranking" className="card-link">Ver Ranking</a>
             </div>
             </div>
