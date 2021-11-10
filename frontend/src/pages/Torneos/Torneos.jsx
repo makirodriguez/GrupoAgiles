@@ -99,11 +99,27 @@ export default function Torneos() {
         })
         .catch(() => console.log("error"));
     }
-    function aceptarSolicitud(id){
-        console.log("acepta" + id);
+    function aceptarSolicitud(id, torneo, user){
+        axios
+        .post(`http://127.0.0.1:3001/api/rankings/`, {
+            Puntos: 0,
+            TorneoID: `${torneo}`, //el recien creado
+            UsuarioID: `${user}`
+        })
+        axios.delete(`http://127.0.0.1:3001/api/solicitudes/${id}`)
+        .then((response) => {
+            window.location.reload(true);
+            window.alert('Se ha aceptado la solicitud') 
+        })
+        .catch(() => console.log("error"));
     }
     function rechazarSolicitud(id){
-        console.log("rechaza" + id);
+        axios.delete(`http://127.0.0.1:3001/api/solicitudes/${id}`)
+        .then((response) => {
+            window.location.reload(true);
+            window.alert('Se ha rechazado la solicitud') 
+        })
+        .catch(() => console.log("error"));
     }
         for(let i = 0; i<torneos.length; i++){
             for(let j = 0; j<user.length; j++){
@@ -213,7 +229,7 @@ export default function Torneos() {
                     return(
                         <div className="align-items-center justify-content-center">
                             {each.Nombre}
-                            <button type="submit" className="btn btn-secondary mx-2" onClick={()=>aceptarSolicitud(each.SolicitudID)}>Aceptar</button>
+                            <button type="submit" className="btn btn-secondary mx-2" onClick={()=>aceptarSolicitud(each.SolicitudID, each.TorneoID, each.UsuarioID)}>Aceptar</button>
                             <button type="submit" className="btn btn-secondary mx-2" onClick={()=>rechazarSolicitud(each.SolicitudID)}>Rechazar</button>
                         </div>
                     )
