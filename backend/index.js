@@ -212,6 +212,17 @@ app.get('/api/solicitudesxtorneo/:id', (req, res) => {
     res.json(rows)
   })
 })
+app.get('/api/solicitudesxuser/:id', (req, res) => {
+  const id = req.params.id
+  const sql =
+    'SELECT Solicitud.SolicitudID, Torneo.TorneoID, Torneo.Nombre FROM Solicitud inner join Usuario on Solicitud.UsuarioID = Usuario.UsuarioID inner join Torneo on Torneo.TorneoID = Solicitud.TorneoID WHERE Solicitud.UsuarioID = ?'
+  db.all(sql, id, (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
 
 // --------------------------- GET all -------------------------------
 

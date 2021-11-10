@@ -37,6 +37,8 @@ export default function Torneos() {
     const [torneosUnidos, getTorneosUnidos] = useState(0);
     const [user, getUsuarios] = useState (0);
     const [participantes, getParticipantes] = useState(0);
+    const [solicitudes, getSolicitudes] = useState(0);
+    const [solicitudesUser, getSolicitudesUser] = useState(0);
     const [datos, setDatos] = useState({
         nombre: ''
     })
@@ -46,6 +48,7 @@ export default function Torneos() {
     const [union, setUnion]= useState();
     const arrayBusqueda=[];
     const arrayTorneosDelUser=[];
+    const arraySolicitudes=[];
    
     
     useEffect(() => {
@@ -53,6 +56,7 @@ export default function Torneos() {
         getUsers();
         getTorneo();
         getTorneosUnidosA();
+        getSolicitudesDelUser();
     },[]);
     
     function getData(){
@@ -68,6 +72,14 @@ export default function Torneos() {
         .then((response) => {
             const data = response.data;
             getTorneosUnidos(data)
+        })
+        .catch(() => console.log("error"));
+    }
+    function getSolicitudesDelUser(){
+        axios.get(`http://127.0.0.1:3001/api/solicitudesxuser/${localStorage.userID}`)
+        .then((response) => {
+            const data = response.data;
+            getSolicitudesUser(data)
         })
         .catch(() => console.log("error"));
     }
@@ -126,7 +138,7 @@ export default function Torneos() {
     }
 
 
-    const unirmeTorneo = (e) => {
+/*    const unirmeTorneo = (e) => {
         setUnion(e.target.value)
         console.log(e.target.value)
         axios
@@ -142,19 +154,45 @@ export default function Torneos() {
         })
    
     }
-
+*/
+    const unirmeTorneo = (e) => {
+        setUnion(e.target.value)
+        console.log(e.target.value)
+        axios
+        .post(`http://127.0.0.1:3001/api/solicitudes/`, {
+            TorneoID: Number(e.target.value),
+            UsuarioID: localStorage.userID
+        })
+        .then((response)=>{
+            console.log(response)
+            window.location.reload(true);
+            window.alert('Estarás en el torneo en cuanto el creador te acepte!') 
+        })
+   
+    }
     for(let i = 0; i<torneosUnidos.length; i++){
         arrayTorneosDelUser.push(torneosUnidos[i].TorneoID);
     }
-    console.log(arrayTorneosDelUser)
+    for(let i = 0; i<solicitudesUser.length; i++){
+        arrayTorneosDelUser.push(solicitudesUser[i].TorneoID);
+    }
 
-    if (torneosDelUser.length === 1){
+    if (torneosDelUser.length > 0){
         axios.get(`http://127.0.0.1:3001/api/participantesxtorneo/${torneosDelUser[0].TorneoID}`)
         .then((response) => {
             const data = response.data.length;
             getParticipantes(data)
         })
         .catch(() => console.log("error"));
+        axios.get(`http://127.0.0.1:3001/api/solicitudesxtorneo/${torneosDelUser[0].TorneoID}`)
+        .then((response) => {
+            const data = response.data;
+            getSolicitudes(data)
+        })
+        .catch(() => console.log("error"));
+        for(let i = 0; i<solicitudes.length; i++){
+            arraySolicitudes.push(solicitudes[i]);
+        }
         return(
             <div className="w-100 d-flex flex-column align-items-center">
             <span className="h4">Mis torneos creados</span>
@@ -163,6 +201,9 @@ export default function Torneos() {
                 <h5 className="card-title">Nombre del torneo:</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{torneosDelUser[0].Nombre}</h6>
                 <p className="card-text">Participantes: {participantes}</p>
+                <p className="card-text">Solicitudes: {arraySolicitudes.map(
+                    each=>each.Nombre
+                )}</p>
                 <a href="/ranking" className="card-link">Ver Ranking</a>
             </div>
             </div>
