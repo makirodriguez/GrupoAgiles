@@ -5,12 +5,13 @@ import Home from "./pages/Home/Home";
 import Ranking from "./pages/Ranking/Ranking";
 import Prode from "./pages/Prode/Prode";
 import Predicciones from "./pages/Predicciones/Predicciones";
-import {Perfil} from "./pages/Perfil/Perfil";
+import Perfil from "./pages/Perfil/Perfil";
 import Torneos from "./pages/Torneos/Torneos";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { useEffect } from "react";
+
 
 
 
@@ -81,40 +82,25 @@ function App() {
   }
 
   return ( 
-   
-  
     <div> 
-      <Router history={history} >
-      
-      <Header />
-      
-       <div className="">
-       <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/ranking" exact component={Ranking} />
-        <Route path="/prode" exact component={Prode} />
-        <Route path="/predicciones" exact component={Predicciones} />
-        <Route path="/torneos" exact component={Torneos} />
-        <Route path="/perfil" exact component={Perfil} />
-        {/*  <Route path="*">
-           <Redirect to="/" /> 
-        </Route>  */}
-      </Switch>   
+      <Router history={history} >      
+        <Header />       
+        <div className="">
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <Route path="/ranking" exact component={Ranking} />
+            <Route path="/prode" exact component={Prode} />
+            <Route path="/predicciones" exact component={Predicciones} />
+            <Route path="/torneos" exact component={Torneos} />
+            <Route path="/perfil" exact component={Perfil} />
+            <Route path="*">
+              <Redirect to="/" /> 
+            </Route> 
+          </Switch>   
+        </div>      
+      </Router>
+    </div>
    
-    </div>      
-   
-    
-  
-
-     </Router>
- </div>
-     
-  
-
-
-
-    
-      
   );
 }
 

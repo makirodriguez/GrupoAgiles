@@ -12,13 +12,13 @@ export const Auth0ProviderWithHistory = ({ children }) => {
     history.push(appState?.returnTo || window.location.pathname);
   }; 
 
-  const url = 'http://localhost:3000/home';
+
 
   return (
     <Auth0Provider
       domain={domain}
       clientId={clientId}
-      redirectUri={url}
+      redirectUri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
     >
       {children}

@@ -5,17 +5,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router} from "react-router-dom";
 import {Auth0ProviderWithHistory} from './helpers/Auth0ProviderWithHistory'
-import AuthenticationButton from './components/authentication-button'
-
 
 
 ReactDOM.render(
  
-  <Router>
+<Router>
   <Auth0ProviderWithHistory>
- 
-    <App auth={AuthenticationButton}/>
-
+    <App/>
   </Auth0ProviderWithHistory>
 </Router>,
     
