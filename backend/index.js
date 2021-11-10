@@ -204,7 +204,7 @@ app.get('/api/participantesxtorneo/:id', (req, res) => {
 app.get('/api/solicitudesxtorneo/:id', (req, res) => {
   const id = req.params.id
   const sql =
-    'SELECT Usuario.UsuarioID, Usuario.Nombre FROM Solicitud inner join Usuario on Solicitud.UsuarioID = Usuario.UsuarioID inner join Torneo on Torneo.TorneoID = Solicitud.TorneoID WHERE Solicitud.TorneoID = ?'
+    'SELECT Solicitud.SolicitudID, Usuario.UsuarioID, Usuario.Nombre FROM Solicitud inner join Usuario on Solicitud.UsuarioID = Usuario.UsuarioID inner join Torneo on Torneo.TorneoID = Solicitud.TorneoID WHERE Solicitud.TorneoID = ?'
   db.all(sql, id, (err, rows) => {
     if (err) {
       return console.error(err.message)
