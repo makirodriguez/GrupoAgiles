@@ -1,19 +1,15 @@
 import { Link } from "react-router-dom";
 import logo from "./icon.png";
-import {LogoutButton} from "../../pages/Logout/Logout";
 import AuthNav from '../auth-nav';
 
 
 const Header = () => {
   return (
     <div className="bg-primary d-flex w-100">
-      <div>
+      <div >
         <Link to="/home" className="text-white text-decoration-none">
           <img src={logo} width="120px" height="120px" alt="Logo" />
         </Link>
-      </div>
-      <div className="p-5" style={{ marginLeft: "auto" }}>
-      
         <span className="mx-3">
           <Link to="/" className="text-white text-decoration-none">
             Home
@@ -44,12 +40,13 @@ const Header = () => {
             Mi perfil
           </Link>
         </span>
-        <span className="mx-3">
-          <Link to="/login" className="text-white text-decoration-none">
-          <AuthNav />
-          </Link>
-        </span> 
       </div>
+      <div className="p-5" style={{ marginLeft: "auto" }}> 
+          <Link to="/login" className="text-white text-decoration-none">
+            <AuthNav />
+          </Link>
+      </div>
+     
     </div>
   );
 };
