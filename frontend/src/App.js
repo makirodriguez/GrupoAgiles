@@ -8,6 +8,7 @@ import Login from "./pages/Login/Login";
 import Predicciones from "./pages/Predicciones/Predicciones";
 import Perfil from "./pages/Perfil/Perfil";
 import Torneos from "./pages/Torneos/Torneos";
+import Solicitudes from "./pages/Solicitudes/Solicitudes";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 
@@ -24,7 +25,8 @@ function App() {
             <Route path="/ranking" exact component={Ranking} />
             <Route path="/prode" exact component={Prode} />
             <Route path="/predicciones" exact component={Predicciones} />
-            <Route path="/torneos" exact component={Torneos} />
+            <Route path="/misTorneos" exact component={Torneos} />
+            <Route path="/solicitudes" exact component={Solicitudes} />
             <Route path="/perfil" exact component={Perfil} />
             <Route path="*">
               <Redirect to="/" />
