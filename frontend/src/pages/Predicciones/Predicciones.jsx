@@ -35,6 +35,8 @@ export default function Predicciones() {
       })
       .catch(() => console.log("error"));
   }
+
+  
   //Guardo en un nuevo array las predicciones que son de un mismo usuario
   for (let i = 0; i < prediccion.length; i++) {
     if (prediccion[i].Nombre === localStorage.nombre) {

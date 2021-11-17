@@ -1,5 +1,4 @@
 const Home = () => {
-  console.log("hola");
   return (
     <div className="">
       <div style={{ textAlign: "center" }}>
