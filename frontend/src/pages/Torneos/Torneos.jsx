@@ -4,10 +4,8 @@ import * as React from 'react';
 
 export default function Torneos() {
     const [torneosDelUser, getTorneosUser] = useState(0);
-    const [torneosUnidos, getTorneosUnidos] = useState(0);
     const [participantes, getParticipantes] = useState(0);
     const [solicitudes, getSolicitudes] = useState(0);
-    const [solicitudesUser, getSolicitudesUser] = useState(0);
     const [datos, setDatos] = useState({
         nombre: ''
     })
@@ -18,7 +16,6 @@ export default function Torneos() {
     useEffect(() => {
         getData();
         getTorneosUnidosA();
-        getSolicitudesDelUser();
     },[]);
     
     function getData(){
@@ -33,19 +30,12 @@ export default function Torneos() {
         axios.get(`http://127.0.0.1:3001/api/allTorneos/${localStorage.userID}`)
         .then((response) => {
             const data = response.data;
-            getTorneosUnidos(data)
+            for(let i = 0; i<data.length; i++){
+                arrayTorneosDelUser.push(data[i].TorneoID);
+            }
         })
         .catch(() => console.log("error"));
     }
-    function getSolicitudesDelUser(){
-        axios.get(`http://127.0.0.1:3001/api/solicitudesxuser/${localStorage.userID}`)
-        .then((response) => {
-            const data = response.data;
-            getSolicitudesUser(data)
-        })
-        .catch(() => console.log("error"));
-    }
-
     function aceptarSolicitud(id, torneo, user){
         axios
         .post(`http://127.0.0.1:3001/api/rankings/`, {
@@ -55,7 +45,6 @@ export default function Torneos() {
         })
         axios.delete(`http://127.0.0.1:3001/api/solicitudes/${id}`)
         .then((response) => {
-            window.location.reload(true);
             window.alert('Se ha aceptado la solicitud') 
         })
         .catch(() => console.log("error"));
@@ -63,17 +52,9 @@ export default function Torneos() {
     function rechazarSolicitud(id){
         axios.delete(`http://127.0.0.1:3001/api/solicitudes/${id}`)
         .then((response) => {
-            window.location.reload(true);
             window.alert('Se ha rechazado la solicitud') 
         })
         .catch(() => console.log("error"));
-    }
-
-    for(let i = 0; i<torneosUnidos.length; i++){
-        arrayTorneosDelUser.push(torneosUnidos[i].TorneoID);
-    }
-    for(let i = 0; i<solicitudesUser.length; i++){
-        arrayTorneosDelUser.push(solicitudesUser[i].TorneoID);
     }
 
     if (torneosDelUser.length > 0){
@@ -91,6 +72,7 @@ export default function Torneos() {
         .catch(() => console.log("error"));
         for(let i = 0; i<solicitudes.length; i++){
             arraySolicitudes.push(solicitudes[i]);
+            arrayTorneosDelUser.push(solicitudes[i].TorneoID);       
         }
         return(
             <div className="w-100 d-flex flex-column align-items-center">
