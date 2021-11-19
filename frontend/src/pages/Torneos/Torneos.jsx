@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as React from 'react';
 
 export default function Torneos() {
@@ -10,32 +10,8 @@ export default function Torneos() {
         nombre: ''
     })
  
-    const arrayTorneosDelUser=[];
     const arraySolicitudes=[];
-   
-    useEffect(() => {
-        getData();
-        getTorneosUnidosA();
-    },[]);
-    
-    function getData(){
-        axios.get(`http://127.0.0.1:3001/api/torneos`)
-        .then((response) => {
-            const data = response.data.filter((item => item.UsuarioCreador === Number(localStorage.userID)));
-            getTorneosUser(data)
-        })
-        .catch(() => console.log("error"));
-    }
-    function getTorneosUnidosA(){
-        axios.get(`http://127.0.0.1:3001/api/allTorneos/${localStorage.userID}`)
-        .then((response) => {
-            const data = response.data;
-            for(let i = 0; i<data.length; i++){
-                arrayTorneosDelUser.push(data[i].TorneoID);
-            }
-        })
-        .catch(() => console.log("error"));
-    }
+
     function aceptarSolicitud(id, torneo, user){
         axios
         .post(`http://127.0.0.1:3001/api/rankings/`, {
@@ -56,8 +32,21 @@ export default function Torneos() {
         })
         .catch(() => console.log("error"));
     }
+    function getData(){
+        axios.get(`http://127.0.0.1:3001/api/torneos`)
+        .then((response) => {
+            const data = response.data.filter((item => item.UsuarioCreador === Number(localStorage.userID)));
+            getTorneosUser(data)
+        })
+        .catch(() => console.log("error"));
+    }
 
-    if (torneosDelUser.length > 0){
+    if (torneosDelUser==0){
+        getData()
+
+    }
+
+    if (torneosDelUser.length === 1){
         axios.get(`http://127.0.0.1:3001/api/participantesxtorneo/${torneosDelUser[0].TorneoID}`)
         .then((response) => {
             const data = response.data.length;
@@ -71,8 +60,7 @@ export default function Torneos() {
         })
         .catch(() => console.log("error"));
         for(let i = 0; i<solicitudes.length; i++){
-            arraySolicitudes.push(solicitudes[i]);
-            arrayTorneosDelUser.push(solicitudes[i].TorneoID);       
+            arraySolicitudes.push(solicitudes[i]);      
         }
         return(
             <div className="w-100 d-flex flex-column align-items-center">
