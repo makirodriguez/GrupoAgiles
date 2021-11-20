@@ -193,10 +193,10 @@ db.run(sql_create, (err) => {
       return console.error(err.message)
     }
   })*/
-/*
-const sql_insert = `INSERT INTO LogrosXUser (LogroID, UsuarioID) VALUES
-    (99, 1),
-    (1, 1)`
+
+/*const sql_insert = `INSERT INTO LogrosXUser (LogroID, UsuarioID) VALUES
+    (99, 12),
+    (1, 12)`
   db.run(sql_insert, err => {
     if (err) {
       return console.error(err.message)
