@@ -10,7 +10,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 
 function createData(idLogro, user, name, img, frase) {
@@ -42,7 +41,7 @@ for (let i = 0; i < logros.length ; i++) {
 }
 
 return (
-       <div>
+       /*<div>
       <div className="row align-items-center profile-header">
         <div className="col-md-2 mb-3">
           <img
@@ -56,7 +55,7 @@ return (
           <p className="lead text-muted">{email}</p>
         </div>
       </div>
-    </div>
+    </div>*/
       <div className=" d-flex flex-column align-items-center">
       <h3>Logros obtenidos</h3>
         {rows.map((i) => {
@@ -78,5 +77,5 @@ return (
     );
 }
 
-export default Perfil;
+//export default Perfil;
 
