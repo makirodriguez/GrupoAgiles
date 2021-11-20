@@ -161,6 +161,61 @@ db.run(sql_create, (err) => {
   }) */
 });
 
+/*var sql_create = `DROP TABLE Logros;`
+
+db.run(sql_create, (err) => {
+  if (err) {
+    return console.error(err.message)
+  }
+})*/
+
+var sql_create = `CREATE TABLE IF NOT EXISTS Logros(
+  LogroID INTEGER PRIMARY KEY AUTOINCREMENT,
+  NombreLogro TEXT,
+  ImgPath TEXT,
+  Frase TEXT,
+  Otorgado INTEGER
+  );`
+
+db.run(sql_create, (err) => {
+  if (err) {
+    return console.error(err.message)
+  }
+})
+
+/*const sql_insert = `INSERT INTO Logros (LogroID, NombreLogro, ImgPath, Frase, Otorgado) VALUES
+    (1, 'Ganador del torneo Global', 'https://cdn.discordapp.com/attachments/877203565725245542/908175776392814602/CampeonAmigos.png', 'Ole, Ole y Ole!', 0),
+    (2, 'Ganador del torneo de Amigos', 'https://cdn.discordapp.com/attachments/877203565725245542/908175783170805810/CampeonGlobal.png', 'Dale campeeoon', 0),
+    (3, 'Perfect', 'https://cdn.discordapp.com/attachments/877203565725245542/908175784433291285/Perfect.png', 'Facilito', 0),
+    (99, 'Tronco', 'https://cdn.discordapp.com/attachments/877203565725245542/908175787960700998/Tronco.png', 'Nos vamos al Nacional', 0)`
+  db.run(sql_insert, err => {
+    if (err) {
+      return console.error(err.message)
+    }
+  })*/
+
+/*const sql_insert = `INSERT INTO LogrosXUser (LogroID, UsuarioID) VALUES
+    (99, 12),
+    (1, 12)`
+  db.run(sql_insert, err => {
+    if (err) {
+      return console.error(err.message)
+    }
+  })*/
+
+var sql_create = `CREATE TABLE IF NOT EXISTS LogrosXUser(
+  LogroID INTEGER,
+  UsuarioID INTEGER,
+  FOREIGN KEY (UsuarioID) REFERENCES Usuario(UsuarioID),
+  FOREIGN KEY (LogroID) REFERENCES Logros(LogroID)
+  );`
+db.run(sql_create, (err) => {
+  if (err) {
+    return console.error(err.message)
+  }
+})
+
+
 // -------------------------------------------------------------------
 
 app.use(cors());
@@ -273,7 +328,7 @@ app.get("/api/torneos", (req, res) => {
 });
 app.get("/api/rankings", (req, res) => {
   const sql =
-    'SELECT RankingID, Ranking.Puntos, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID ORDER by Ranking.Puntos DESC'
+    'SELECT RankingID, Ranking.Puntos, Usuario.Nombre Usuario, Torneo.Nombre Torneo, Usuario.UsuarioID FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID ORDER by Ranking.Puntos DESC'
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message);
@@ -281,6 +336,25 @@ app.get("/api/rankings", (req, res) => {
     res.json(rows);
   });
 });
+app.get('/api/logros', (req, res) => {
+  const sql = 'SELECT * FROM Logros ORDER BY LogroID'
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
+
+app.get('/api/logrosXUser', (req, res) => {
+  const sql = 'SELECT * FROM LogrosXUser ORDER BY UsuarioID'
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      return console.error(err.message)
+    }
+    res.json(rows)
+  })
+})
 
 // ------------------------ GET uno en especifico -------------------------------------
 
@@ -349,7 +423,7 @@ app.get('/api/allTorneos/:id', (req, res) => {
 app.get("/api/rankings/:id", (req, res) => {
   const id = req.params.id;
   const sql =
-    "SELECT DISTINCT RankingID, Ranking.Puntos, count(case when Prediccion.Puntos = 1 then 1 else null end) as Aciertos, count(case when Prediccion.Puntos = 0 then 1 else null end) as Fallos, count(case when Prediccion.Puntos = 3 then 1 else null end) as Perfect, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID LEFT JOIN Prediccion on Usuario.UsuarioID = Prediccion.UsuarioID WHERE Torneo.TorneoID = ? Group by Usuario.Nombre ORDER by Ranking.Puntos DESC";
+    "SELECT DISTINCT RankingID, Ranking.Puntos, count(case when Prediccion.Puntos = 1 then 1 else null end) as Aciertos, count(case when Prediccion.Puntos = 0 then 1 else null end) as Fallos, count(case when Prediccion.Puntos = 3 then 1 else null end) as Perfect, Usuario.Nombre Usuario, Usuario.UsuarioID, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID LEFT JOIN Prediccion on Usuario.UsuarioID = Prediccion.UsuarioID WHERE Torneo.TorneoID = ? Group by Usuario.Nombre ORDER by Ranking.Puntos DESC";
   db.all(sql, id, (err, rows) => {
     if (err) {
       return console.error(err.message);
@@ -357,6 +431,18 @@ app.get("/api/rankings/:id", (req, res) => {
     res.json(rows);
   });
 });
+app.get("/api/logros/:id", (req, res) => {
+  const id = req.params.id;
+  const sql =
+    "SELECT * FROM Logros INNER JOIN LogrosXUser on Logros.LogroID = LogrosXUser.LogroID INNER JOIN Usuario on Usuario.UsuarioID = LogrosXUser.UsuarioID WHERE LogrosXUser.UsuarioID = ? ORDER BY LogroID";
+  db.all(sql, id, (err, rows) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.json(rows);
+  });
+});
+
 
 // ----------------------------- POST ----------------------------------
 
@@ -464,6 +550,16 @@ app.post("/api/rankings", (req, res) => {
         id: this.lastID,
         data: ranking,
       });
+    }
+  });
+});
+
+app.post("/api/logrosXUser", (req, res) => {
+  const sql = "INSERT INTO LogrosXUser (UsuarioID, LogroID) VALUES (?, ?)";
+  const logroUser = [req.body.UsuarioID, req.body.LogroID];
+  db.run(sql, logroUser, function (err, result) {
+    if (err) {
+      return console.error(err.message);
     }
   });
 });
