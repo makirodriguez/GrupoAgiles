@@ -35,6 +35,8 @@ export default function Predicciones() {
       })
       .catch(() => console.log("error"));
   }
+
+  
   //Guardo en un nuevo array las predicciones que son de un mismo usuario
   for (let i = 0; i < prediccion.length; i++) {
     if (prediccion[i].Nombre === localStorage.nombre) {
@@ -111,7 +113,14 @@ export default function Predicciones() {
                 <span className="h1"></span>
                 <div
                   className={`d-flex flex-row w-100 ${
-                    prediccion.Resultado === prediccion.Score && "bg-success"
+                    prediccion.GolesLocalPredichos === prediccion.GolesLocal &&
+                    prediccion.GolesVisitante === prediccion.GolesVisit
+                      ? "bg-warning"
+                      : ""
+                  } ${
+                    prediccion.Resultado === prediccion.Score
+                      ? "bg-success"
+                      : ""
                   } ${
                     prediccion.Resultado !== prediccion.Score &&
                     prediccion.Resultado &&

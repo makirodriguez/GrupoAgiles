@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import { useEffect, useState } from "react";
 import * as React from 'react';
@@ -9,6 +10,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import React from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function createData(idLogro, user, name, img, frase) {
         return {idLogro, user, name, img, frase };
@@ -16,6 +19,8 @@ function createData(idLogro, user, name, img, frase) {
 
 export default function Perfil() {
   const [logros, getLogros] = useState(0);
+    const { user } = useAuth0();
+  const { name, picture, email } = user;
 
 
   useEffect(() => {
@@ -37,7 +42,21 @@ for (let i = 0; i < logros.length ; i++) {
 }
 
 return (
-
+       <div>
+      <div className="row align-items-center profile-header">
+        <div className="col-md-2 mb-3">
+          <img
+            src={picture}
+            alt="Profile"
+            className="rounded-circle img-fluid profile-picture mb-3 mb-md-0"
+          />
+        </div>
+        <div className="col-md text-center text-md-left">
+          <h2>{name}</h2>
+          <p className="lead text-muted">{email}</p>
+        </div>
+      </div>
+    </div>
       <div className=" d-flex flex-column align-items-center">
       <h3>Logros obtenidos</h3>
         {rows.map((i) => {
@@ -58,3 +77,6 @@ return (
       </div>
     );
 }
+
+export default Perfil;
+

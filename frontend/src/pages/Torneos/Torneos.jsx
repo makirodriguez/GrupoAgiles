@@ -87,6 +87,16 @@ export default function Torneos() {
         })
         .catch(() => console.log("error"));
     }
+    function confirmacion(){
+        if (window.confirm("¿Realmente queres borrar el torneo?")) {
+        //console.log(torneosDelUser[0].TorneoID);
+        axios.delete(`http://127.0.0.1:3001/api/torneos/${torneosDelUser[0].TorneoID}`)
+        .then((response) => {
+            console.log("hecho");
+        })
+        .catch(() => console.log("error"));
+        }   
+    }
     
         for(let i = 0; i<torneos.length; i++){
             for(let j = 0; j<user.length; j++){
@@ -143,6 +153,7 @@ export default function Torneos() {
    
     }
 
+
     for(let i = 0; i<torneosUnidos.length; i++){
         arrayTorneosDelUser.push(torneosUnidos[i].TorneoID);
     }
@@ -163,6 +174,9 @@ export default function Torneos() {
                 <h5 className="card-title">Nombre del torneo:</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{torneosDelUser[0].Nombre}</h6>
                 <p className="card-text">Participantes: {participantes}</p>
+                <form className="px-2 w-75 d-flex flex-column align-items-center" >
+                <button type="submit" className="btn btn-secondary mt-2" onClick={confirmacion}>Eliminar</button>
+                </form>
                 <a href="/ranking" className="card-link">Ver Ranking</a>
             </div>
             </div>

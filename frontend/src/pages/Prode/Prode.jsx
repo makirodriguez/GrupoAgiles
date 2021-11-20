@@ -166,7 +166,7 @@ export default function Prode() {
                     }
                   }
                 });
-              console.log(visitante);
+              
               return (
                 <div
                   key={index}
