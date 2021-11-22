@@ -173,6 +173,60 @@ db.run(sql_create, (err) => {
   }) */
 })
 
+/*var sql_create = `DROP TABLE Logros;`
+
+db.run(sql_create, (err) => {
+  if (err) {
+    return console.error(err.message)
+  }
+})*/
+
+var sql_create = `CREATE TABLE IF NOT EXISTS Logros(
+  LogroID INTEGER PRIMARY KEY AUTOINCREMENT,
+  NombreLogro TEXT,
+  ImgPath TEXT,
+  Frase TEXT,
+  Otorgado INTEGER
+  );`;
+
+db.run(sql_create, (err) => {
+  if (err) {
+    return console.error(err.message);
+  }
+});
+
+/*const sql_insert = `INSERT INTO Logros (LogroID, NombreLogro, ImgPath, Frase, Otorgado) VALUES
+    (1, 'Ganador del torneo Global', 'https://cdn.discordapp.com/attachments/877203565725245542/908175776392814602/CampeonAmigos.png', 'Ole, Ole y Ole!', 0),
+    (2, 'Ganador del torneo de Amigos', 'https://cdn.discordapp.com/attachments/877203565725245542/908175783170805810/CampeonGlobal.png', 'Dale campeeoon', 0),
+    (3, 'Perfect', 'https://cdn.discordapp.com/attachments/877203565725245542/908175784433291285/Perfect.png', 'Facilito', 0),
+    (99, 'Tronco', 'https://cdn.discordapp.com/attachments/877203565725245542/908175787960700998/Tronco.png', 'Nos vamos al Nacional', 0)`
+  db.run(sql_insert, err => {
+    if (err) {
+      return console.error(err.message)
+    }
+  })*/
+
+/*const sql_insert = `INSERT INTO LogrosXUser (LogroID, UsuarioID) VALUES
+    (99, 12),
+    (1, 12)`
+  db.run(sql_insert, err => {
+    if (err) {
+      return console.error(err.message)
+    }
+  })*/
+
+var sql_create = `CREATE TABLE IF NOT EXISTS LogrosXUser(
+  LogroID INTEGER,
+  UsuarioID INTEGER,
+  FOREIGN KEY (UsuarioID) REFERENCES Usuario(UsuarioID),
+  FOREIGN KEY (LogroID) REFERENCES Logros(LogroID)
+  );`;
+db.run(sql_create, (err) => {
+  if (err) {
+    return console.error(err.message);
+  }
+});
+
 // -------------------------------------------------------------------
 
 app.use(cors())
@@ -307,7 +361,26 @@ app.get('/api/torneos', (req, res) => {
 })
 app.get('/api/rankings', (req, res) => {
   const sql =
-    'SELECT RankingID, Ranking.Puntos, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID ORDER by Ranking.Puntos DESC'
+    "SELECT RankingID, Ranking.Puntos, Usuario.Nombre Usuario, Torneo.Nombre Torneo, Usuario.UsuarioID FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID ORDER by Ranking.Puntos DESC";
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.json(rows);
+  });
+});
+app.get("/api/logros", (req, res) => {
+  const sql = "SELECT * FROM Logros ORDER BY LogroID";
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.json(rows);
+  });
+});
+
+app.get("/api/logrosXUser", (req, res) => {
+  const sql = "SELECT * FROM LogrosXUser ORDER BY UsuarioID";
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message)
@@ -367,12 +440,13 @@ app.get('/api/torneos/:id', (req, res) => {
     if (err) {
       return console.error(err.message)
     }
-    res.json(rows)
-  })
-})
-app.get('/api/allTorneos/:id', (req, res) => {
-  const id = req.params.id
-  const sql = 'SELECT Torneo.TorneoID, Torneo.Nombre FROM Torneo inner join Ranking on Torneo.TorneoID = Ranking.TorneoID INNER JOIN Usuario on Usuario.UsuarioID = Ranking.UsuarioID WHERE Usuario.UsuarioID = ? GROUP by Torneo.TorneoID'
+    res.json(rows);
+  });
+});
+app.get("/api/allTorneos/:id", (req, res) => {
+  const id = req.params.id;
+  const sql =
+    "SELECT Torneo.TorneoID, Torneo.Nombre FROM Torneo inner join Ranking on Torneo.TorneoID = Ranking.TorneoID INNER JOIN Usuario on Usuario.UsuarioID = Ranking.UsuarioID WHERE Usuario.UsuarioID = ? GROUP by Torneo.TorneoID";
   db.all(sql, id, (err, rows) => {
     if (err) {
       return console.error(err.message)
@@ -383,7 +457,32 @@ app.get('/api/allTorneos/:id', (req, res) => {
 app.get('/api/rankings/:id', (req, res) => {
   const id = req.params.id
   const sql =
-    'SELECT DISTINCT RankingID, Ranking.Puntos, count(case when Prediccion.Puntos = 1 then 1 else null end) as Aciertos, count(case when Prediccion.Puntos = 0 then 1 else null end) as Fallos, count(case when Prediccion.Puntos = 3 then 1 else null end) as Perfect, Usuario.Nombre Usuario, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID LEFT JOIN Prediccion on Usuario.UsuarioID = Prediccion.UsuarioID WHERE Torneo.TorneoID = ? Group by Usuario.Nombre ORDER by Ranking.Puntos DESC'
+
+    "SELECT DISTINCT RankingID, Ranking.Puntos, count(case when Prediccion.Puntos = 1 then 1 else null end) as Aciertos, count(case when Prediccion.Puntos = 0 then 1 else null end) as Fallos, count(case when Prediccion.Puntos = 3 then 1 else null end) as Perfect, Usuario.Nombre Usuario, Usuario.UsuarioID, Torneo.Nombre Torneo FROM Ranking inner join Usuario on Ranking.UsuarioID = Usuario.UsuarioID inner join Torneo on Ranking.TorneoID = Torneo.TorneoID LEFT JOIN Prediccion on Usuario.UsuarioID = Prediccion.UsuarioID WHERE Torneo.TorneoID = ? Group by Usuario.Nombre ORDER by Ranking.Puntos DESC";
+  db.all(sql, id, (err, rows) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.json(rows);
+  });
+});
+app.get("/api/logros/:id", (req, res) => {
+  const id = req.params.id;
+  const sql =
+    "SELECT * FROM Logros INNER JOIN LogrosXUser on Logros.LogroID = LogrosXUser.LogroID INNER JOIN Usuario on Usuario.UsuarioID = LogrosXUser.UsuarioID WHERE LogrosXUser.UsuarioID = ? ORDER BY LogroID";
+  db.all(sql, id, (err, rows) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.json(rows);
+  });
+});
+
+app.get("/api/historialAciertos/:id", (req, res) => {
+  const id = req.params.id;
+  const sql =
+    "SELECT Usuario.Nombre,  count(case when Prediccion.Puntos = 1 then 1 else null end) as Aciertos, count(case when Prediccion.Puntos = 0 then 1 else null end) as Fallos, count(case when Prediccion.Puntos = 3 then 1 else null end) as Perfect, count(Prediccion.UsuarioID) as Total FROM Prediccion inner join Usuario on Prediccion.UsuarioID = Usuario.UsuarioID where Usuario.UsuarioID = ?";
+
   db.all(sql, id, (err, rows) => {
     if (err) {
       return console.error(err.message)
@@ -519,6 +618,16 @@ app.post('/api/rankings', (req, res) => {
     }
   })
 })
+
+app.post("/api/logrosXUser", (req, res) => {
+  const sql = "INSERT INTO LogrosXUser (UsuarioID, LogroID) VALUES (?, ?)";
+  const logroUser = [req.body.UsuarioID, req.body.LogroID];
+  db.run(sql, logroUser, function (err, result) {
+    if (err) {
+      return console.error(err.message);
+    }
+  });
+});
 
 // ------------------------------- PUT editar/id --------------------------
 
@@ -793,47 +902,47 @@ async function demo () {
 }
 demo()
 
-async function demo2 () {
+async function demo2() {
   const creaTabla2 = `
-    CREATE TABLE IF NOT EXISTS Variables2 (UsuarioID INTEGER, TorneoID INTEGER, Puntos INTEGER);`
+    CREATE TABLE IF NOT EXISTS Variables2 (UsuarioID INTEGER, TorneoID INTEGER, Puntos INTEGER);`;
   db.run(creaTabla2, function (err, result) {
     if (err) {
-      return console.error(err.message)
+      return console.error(err.message);
     }
-  })
-  await sleep(1000)
+  });
+  await sleep(1000);
   const insertTabla12 = `
   INSERT INTO Variables2 (UsuarioID, TorneoID, Puntos) 
   SELECT Usuario.UsuarioID, Torneo.TorneoID, SUM(Case when Prediccion.Matchday >= Torneo.FechaCreacion Then Puntos Else null End) AS Puntos
   FROM Usuario INNER JOIN Prediccion ON Usuario.UsuarioID = Prediccion.UsuarioID inner join Torneo on Usuario.UsuarioID = Torneo.UsuarioCreador
-  GROUP BY Usuario.UsuarioID;`
-  await sleep(1000)
+  GROUP BY Usuario.UsuarioID;`;
+  await sleep(1000);
   db.run(insertTabla12, function (err, result) {
     if (err) {
-      return console.error(err.message)
+      return console.error(err.message);
     }
-  })
+  });
 
   const insertTabla22 = `
   INSERT OR REPLACE INTO Ranking (RankingID, Puntos, TorneoID, UsuarioID)
   SELECT Ranking.RankingID, ifNull(Variables2.Puntos,0) AS Puntos, Variables2.TorneoID, Variables2.UsuarioID
   From Ranking inner JOIN Variables2 ON (Ranking.TorneoID = Variables2.TorneoID and Ranking.UsuarioID = Variables2.UsuarioID)
-  where Variables2.TorneoID > 1`
-  await sleep(1000)
+  where Variables2.TorneoID > 1`;
+  await sleep(1000);
   db.run(insertTabla22, function (err, result) {
     if (err) {
-      return console.error(err.message)
+      return console.error(err.message);
     }
-  })
+  });
   const eliminaTabla2 = `
-    DROP TABLE Variables2;`
+    DROP TABLE Variables2;`;
   db.run(eliminaTabla2, function (err, result) {
     if (err) {
-      return console.error(err.message)
+      return console.error(err.message);
     }
-  })
+  });
 }
-demo2()
+demo2();
 
 // ----------------------------------------------------------------------------
 
