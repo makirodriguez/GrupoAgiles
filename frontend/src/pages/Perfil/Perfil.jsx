@@ -10,7 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useAuth0 } from "@auth0/auth0-react";
-import Chart from "react-google-charts";
+import { Link } from "react-router-dom";
 
 function createData(idLogro, user, name, img, frase) {
   return { idLogro, user, name, img, frase };
@@ -20,15 +20,21 @@ function createData2(nombre, aciertos, fallos, perfect, total) {
   return { nombre, aciertos, fallos, perfect, total };
 }
 
+function createData3(idTorneo, nombre) {
+  return { idTorneo, nombre };
+}
+
 export default function Perfil() {
   const [logros, getLogros] = useState(0);
   const { user } = useAuth0();
   // const { name, picture, email } = user;
   const [historial, getHistorial] = useState(0);
+  const [torneos, getTorneos] = useState(0);
 
   useEffect(() => {
     getAllLogros();
     getHistorialAciertos();
+    getAllTorneos();
   }, []);
 
   function getAllLogros() {
@@ -77,7 +83,22 @@ export default function Perfil() {
       )
     );
   }
-  console.log(rowsH);
+
+  function getAllTorneos() {
+    axios
+      .get(`http://127.0.0.1:3001/api/allTorneos/${localStorage.userID}`)
+      .then((response) => {
+        const dataTorneos = response.data;
+        getTorneos(dataTorneos);
+        console.log("TORNEOS", dataTorneos);
+      })
+      .catch(() => console.log("error"));
+  }
+
+  const rowsTorneo = [];
+  for (let i = 0; i < torneos.length; i++) {
+    rowsTorneo.push(createData3(torneos[i].TorneoID, torneos[i].Nombre));
+  }
 
   return (
     /*<div>
@@ -146,6 +167,28 @@ export default function Perfil() {
           );
         }
       })}
+      <br />
+      <h3>Mis Torneos</h3>
+      <div id="tablaConDatos">
+        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="left">Nombre Torneo</TableCell>
+              <TableCell align="right">
+                <Link to="/Ranking">Ir a Ranking</Link>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rowsTorneo.map((row) => (
+              <TableRow>
+                <TableCell align="left">{row.nombre}</TableCell>
+                <TableCell align="right"></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
