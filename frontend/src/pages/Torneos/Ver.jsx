@@ -22,6 +22,7 @@ export default function Ver() {
         axios.delete(`http://127.0.0.1:3001/api/solicitudes/${id}`)
         .then((response) => {
             window.alert('Se ha aceptado la solicitud') 
+            window.location.reload(true);
         })
         .catch(() => console.log("error"));
     }
@@ -29,8 +30,19 @@ export default function Ver() {
         axios.delete(`http://127.0.0.1:3001/api/solicitudes/${id}`)
         .then((response) => {
             window.alert('Se ha rechazado la solicitud') 
+            window.location.reload(true);
         })
         .catch(() => console.log("error"));
+    }
+    function confirmacion(){
+        if (window.confirm("¿Realmente queres borrar el torneo?")) {
+        //console.log(torneosDelUser[0].TorneoID);
+        axios.delete(`http://127.0.0.1:3001/api/torneos/${localStorage.creado}`)
+        .then((response) => {
+            window.alert('Se ha borrado el torneo') 
+        })
+        .catch(() => console.log("error"));
+        }   
     }
 
     function getData(){
@@ -72,6 +84,9 @@ export default function Ver() {
                 })
                 }
                 </div>
+                <form className="px-2 w-75 d-flex flex-column align-items-center" >
+                <button type="submit" className="btn btn-secondary mt-2" onClick={confirmacion}>Eliminar</button>
+                </form>
                 <a href="/ranking" className="card-link">Ver Ranking</a>
             </div>
             </div>
