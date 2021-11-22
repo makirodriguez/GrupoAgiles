@@ -24,9 +24,9 @@ function getData(){
 if(torneosDelUser==0){
   return <Crear />
 }else{
-  return <Ver 
-  TorneoID={torneosDelUser[0].TorneoID} 
-  />
+  localStorage.creado=torneosDelUser[0].TorneoID
+  localStorage.creadoNombre=torneosDelUser[0].Nombre
+  return <Ver />
 }
 
 }

@@ -1,15 +1,17 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from 'react';
 
-export default function Ver(props) {
+export default function Ver() {
     const [participantes, getParticipantes] = useState(0);
     const [solicitudes, getSolicitudes] = useState(0);
 
     const arraySolicitudes=[];
 
-    const torneoCreado = {props}
-
+    useEffect(() => {
+        getData();
+      }, []);
+      
     function aceptarSolicitud(id, torneo, user){
         axios
         .post(`http://127.0.0.1:3001/api/rankings/`, {
@@ -31,18 +33,20 @@ export default function Ver(props) {
         .catch(() => console.log("error"));
     }
 
-        axios.get(`http://127.0.0.1:3001/api/participantesxtorneo/${torneoCreado}`)
+    function getData(){
+        axios.get(`http://127.0.0.1:3001/api/participantesxtorneo/${localStorage.creado}`)
         .then((response) => {
             const data = response.data.length;
             getParticipantes(data)
         })
         .catch(() => console.log("error"));
-        axios.get(`http://127.0.0.1:3001/api/solicitudesxtorneo/${torneoCreado}`)
+        axios.get(`http://127.0.0.1:3001/api/solicitudesxtorneo/${localStorage.creado}`)
         .then((response) => {
             const data = response.data;
             getSolicitudes(data)
         })
         .catch(() => console.log("error"));
+    }
         for(let i = 0; i<solicitudes.length; i++){
             arraySolicitudes.push(solicitudes[i]);      
         }
@@ -52,7 +56,7 @@ export default function Ver(props) {
             <div className="card d-flex flex-column align-items-center">
                 <div className="card-body w-100 d-flex flex-column align-items-center">
                 <h5 className="card-title">Nombre del torneo:</h5>
-                <h6 className="card-subtitle mb-2 text-muted">{torneoCreado}</h6>
+                <h6 className="card-subtitle mb-2 text-muted">{localStorage.creadoNombre}</h6>
                 <p className="card-text">Participantes: {participantes}</p>
                 <div className={`px-2 w-75 d-flex flex-column align-items-center ${
                     arraySolicitudes.length===0 ? "hide" : null
