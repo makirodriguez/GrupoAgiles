@@ -171,6 +171,7 @@ db.run(sql_create, (err) => {
       return console.error(err.message)
     }
   }) */
+
 })
 
 /*var sql_create = `DROP TABLE Logros;`
@@ -380,14 +381,15 @@ app.get("/api/logros", (req, res) => {
 });
 
 app.get("/api/logrosXUser", (req, res) => {
-  const sql = "SELECT * FROM LogrosXUser ORDER BY UsuarioID";
+  const sql = "SELECT DISTINCT LogroID, UsuarioID FROM LogrosXUser ORDER BY UsuarioID";
   db.all(sql, [], (err, rows) => {
     if (err) {
       return console.error(err.message)
     }
-    res.json(rows)
-  })
-})
+    res.json(rows);
+  });
+});
+
 
 // ------------------------ GET uno en especifico -------------------------------------
 
@@ -490,6 +492,7 @@ app.get("/api/historialAciertos/:id", (req, res) => {
     res.json(rows)
   })
 })
+
 
 // ----------------------------- POST ----------------------------------
 
@@ -723,6 +726,19 @@ app.put('/api/rankings/:id', (req, res) => {
     res.status(200).json(ranking)
   })
 })
+
+app.put("/api/logros/:id", (req, res) => {
+  const id = req.params.id;
+  const logros = [req.body.NombreLogro, req.body.ImgPath, req.body.Frase, req.body.Otorgado, id];
+  const sql =
+    "UPDATE Logros SET NombreLogro = ?, ImgPath = ?, Frase = ?, Otorgado = ? WHERE (LogroID = ?)";
+  db.run(sql, logros, (err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.status(200).json(logros);
+  });
+});
 
 // ---------------------------- DELETE delete/id ----------------------------
 
