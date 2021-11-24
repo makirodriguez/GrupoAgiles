@@ -52,10 +52,10 @@ export default function Prode() {
   }, []);
   const sendResult = (pre) => {
     setLoading(true);
-    if (pre.GolesLocal == null || pre.GolesLocal == "") {
+    if (pre.GolesLocal == null || pre.GolesLocal === "") {
       pre.GolesLocal = 0;
     }
-    if (pre.GolesVisitante == null || pre.GolesVisitante == "") {
+    if (pre.GolesVisitante == null || pre.GolesVisitante === "") {
       pre.GolesVisitante = 0;
     }
     if (pre.GolesLocal > pre.GolesVisitante) {
