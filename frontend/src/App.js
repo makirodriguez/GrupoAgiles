@@ -24,7 +24,7 @@ function App() {
   useEffect(() => {
     localStorage.clear();
   }, []);
-  if (isAuthenticated == true){
+  if (isAuthenticated === true){
     
     console.log(user)
     function setMatchday() {

@@ -1,4 +1,3 @@
-import { formControlClasses } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -46,7 +45,7 @@ export default function Predicciones() {
 
   for (let i = 0; i < prediccionPorUsuario.length; i++) {
     const elemento = prediccionPorUsuario[i].Matchday;
-    if (elemento == match) {
+    if (elemento === match) {
       partidosYPredicciones.push(prediccionPorUsuario[i]);
     }
   }
@@ -58,7 +57,7 @@ export default function Predicciones() {
       matchs.push(elemento);
     }
 
-    if (elemento == match) {
+    if (elemento === match) {
       partidosYPredicciones.push(partidos[i]);
     }
   }

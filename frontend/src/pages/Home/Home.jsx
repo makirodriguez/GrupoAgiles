@@ -1,156 +1,127 @@
 import axios from "axios";
 
 const Home = () => {
-  
-if (localStorage.TorneoActual === undefined){
-  localStorage.setItem("TorneoActual", 1);
-  console.log(localStorage.TorneoActual);
-}
+  if (localStorage.TorneoActual === undefined) {
+    localStorage.setItem("TorneoActual", 1);
+    console.log(localStorage.TorneoActual);
+  }
 
+  //Crecion funcion que devuelve los usuarios y sus puntos del torneo de la champions
 
-//Crecion funcion que devuelve los usuarios y sus puntos del torneo de la champions
-
-  function ganadorGlobal(){
+  function ganadorGlobal() {
     //console.log('llegamos hasta aca')
-    axios.get(`http://127.0.0.1:3001/api/rankings/${localStorage.TorneoActual}`)
+    axios
+      .get(`http://127.0.0.1:3001/api/rankings/${localStorage.TorneoActual}`)
       .then((response) => {
         axios
-          .post(`http://127.0.0.1:3001/api/logrosXUser`,{
-            UsuarioID : response.data[0].UsuarioID,
-            LogroID : `1`,
+          .post(`http://127.0.0.1:3001/api/logrosXUser`, {
+            UsuarioID: response.data[0].UsuarioID,
+            LogroID: `1`,
           })
-          .then((res => {
-            
-            
-          }
-          ))
-      })
+          .then((res) => {});
+      });
     const id = 1;
-    axios.put(`http://127.0.0.1:3001/api/logros/${id}`,{
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"},
-        NombreLogro : 'Ganador del torneo Global',
-        ImgPath : 'https://cdn.discordapp.com/attachments/877203565725245542/908175776392814602/CampeonAmigos.png',
-        Frase : 'Ole, Ole y Ole!',
-        Otorgado : 1,
-    })
-      .catch(() => console.log("error"));
-
-  }
-  function ganadorTronco(){
-    //console.log('llegamos hasta aca')
-    axios.get(`http://127.0.0.1:3001/api/rankings/${localStorage.TorneoActual}`)
-      .then((response) => {
-        const troncos = response.data.filter(
-          (item) => item.Aciertos === 0
-        );
-        //console.log(troncos)
-        for (var i=0; i < troncos.length; i++){
-          console.log(i)
-          console.log(troncos[i])
-          axios
-          .post(`http://127.0.0.1:3001/api/logrosXUser`,{
-            UsuarioID : troncos[i].UsuarioID,
-            LogroID : `99`,
-          })
-          .then((res => {
-          
-  
-          }))
-          }
-        })
-      
-
-  }
-
-  function premioPerfect(){
-    //console.log('llegamos hasta aca')
-    axios.get(`http://127.0.0.1:3001/api/rankings/${localStorage.TorneoActual}`)
-      .then((response) => {
-        const perfectos = response.data.filter(
-          (item) => item.Perfect != 0
-        );
-        console.log(perfectos)
-        for (var i=0; i < perfectos.length; i++){
-          console.log(i)
-          console.log(perfectos[i])
-          axios
-          .post(`http://127.0.0.1:3001/api/logrosXUser`,{
-            UsuarioID : perfectos[i].UsuarioID,
-            LogroID : `3`,
-          })
-          .then((res => {
-          
-          }))
-          }})
-        
-        }
-
-
-
-  
-
-
-
-  
-
-  function ganadorAmigos(){
-    
-    axios.get(`http://127.0.0.1:3001/api/torneos`).then((response1) => {
-      const torneosAmigos = response1.data
-      console.log('anda amigos 1')
-      for (var i=2; i <= torneosAmigos.length; i++){
-          console.log('funciona el for');
-          axios.get(`http://127.0.0.1:3001/api/rankings/${i}`)
-            .then((response) => {
-              console.log(response)
-              console.log('anda amigos2')
-              axios
-                .post(`http://127.0.0.1:3001/api/logrosXUser`,{
-                  UsuarioID : response.data[0].UsuarioID,
-                  LogroID : `2`,
-                })
-                .then((res => {
-                  console.log(res)
-                }
-                ))
-                })
-              .catch(() => console.log("error"));
-  
-    }
-  })
-}
-
-                
-
-  
-            
-  function otorgarGanadores(){
-    axios.get(`http://127.0.0.1:3001/api/partidos`).then((response1) => {
-          const partidosRestantes = response1.data.filter(
-            (item) => item.Score === null)
-          
-          //CORREGIR LOGROSXUSER
-          if (partidosRestantes.length = 0){
-              
-              axios.get(`http://127.0.0.1:3001/api/logros`).then((response) => {
-                var otorgado = response.data[0].Otorgado;
-                
-                if (otorgado == 0){
-                  
-                  ganadorGlobal();
-                  ganadorAmigos();
-                  ganadorTronco()
-
-                }
-
+    axios
+      .put(`http://127.0.0.1:3001/api/logros/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        NombreLogro: "Ganador del torneo Global",
+        ImgPath:
+          "https://cdn.discordapp.com/attachments/877203565725245542/908175776392814602/CampeonAmigos.png",
+        Frase: "Ole, Ole y Ole!",
+        Otorgado: 1,
       })
-    }
-  })
-}
-premioPerfect();
-otorgarGanadores();
+      .catch(() => console.log("error"));
+  }
+  function ganadorTronco() {
+    //console.log('llegamos hasta aca')
+    axios
+      .get(`http://127.0.0.1:3001/api/rankings/${localStorage.TorneoActual}`)
+      .then((response) => {
+        const troncos = response.data.filter((item) => item.Aciertos === 0);
+        //console.log(troncos)
+        for (var i = 0; i < troncos.length; i++) {
+          console.log(i);
+          console.log(troncos[i]);
+          axios
+            .post(`http://127.0.0.1:3001/api/logrosXUser`, {
+              UsuarioID: troncos[i].UsuarioID,
+              LogroID: `99`,
+            })
+            .then((res) => {});
+        }
+      });
+  }
+
+  function premioPerfect() {
+    //console.log('llegamos hasta aca')
+    axios
+      .get(`http://127.0.0.1:3001/api/rankings/${localStorage.TorneoActual}`)
+      .then((response) => {
+        const perfectos = response.data.filter((item) => item.Perfect !== 0);
+        console.log(perfectos);
+        for (var i = 0; i < perfectos.length; i++) {
+          console.log(i);
+          console.log(perfectos[i]);
+          axios
+            .post(`http://127.0.0.1:3001/api/logrosXUser`, {
+              UsuarioID: perfectos[i].UsuarioID,
+              LogroID: `3`,
+            })
+            .then((res) => {});
+        }
+      });
+  }
+
+  function ganadorAmigos() {
+    axios.get(`http://127.0.0.1:3001/api/torneos`).then((response1) => {
+      const torneosAmigos = response1.data;
+      console.log("anda amigos 1");
+      for (var i = 2; i <= torneosAmigos.length; i++) {
+        console.log("funciona el for");
+        axios
+          .get(`http://127.0.0.1:3001/api/rankings/${i}`)
+          .then((response) => {
+            console.log(response);
+            console.log("anda amigos2");
+            axios
+              .post(`http://127.0.0.1:3001/api/logrosXUser`, {
+                UsuarioID: response.data[0].UsuarioID,
+                LogroID: `2`,
+              })
+              .then((res) => {
+                console.log(res);
+              });
+          })
+          .catch(() => console.log("error"));
+      }
+    });
+  }
+
+  function otorgarGanadores() {
+    axios.get(`http://127.0.0.1:3001/api/partidos`).then((response1) => {
+      const partidosRestantes = response1.data.filter(
+        (item) => item.Score === null
+      );
+
+      //CORREGIR LOGROSXUSER
+      if (partidosRestantes.length === 0) {
+        axios.get(`http://127.0.0.1:3001/api/logros`).then((response) => {
+          var otorgado = response.data[0].Otorgado;
+
+          if (otorgado === 0) {
+            ganadorGlobal();
+            ganadorAmigos();
+            ganadorTronco();
+          }
+        });
+      }
+    });
+  }
+  premioPerfect();
+  otorgarGanadores();
 
   return (
     <div className="">

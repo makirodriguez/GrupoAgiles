@@ -1,15 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
+import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom";
 
 function createData(idLogro, user, name, img, frase) {
@@ -26,7 +22,6 @@ function createData3(idTorneo, nombre) {
 
 export default function Perfil() {
   const [logros, getLogros] = useState(0);
-  const { user } = useAuth0();
   // const { name, picture, email } = user;
   const [historial, getHistorial] = useState(0);
   const [torneos, getTorneos] = useState(0);
@@ -123,8 +118,8 @@ export default function Perfil() {
           <div className="w-25 p-3 mb-2 d-flex align-items-center border border-dark rounded bg-success text-white">
             <img
               src={i.img}
-              class="rounded-circle img-thumbnail"
-              alt="profile-image"
+              className="rounded-circle img-thumbnail"
+              alt="profile-img"
             />
             <div className="w-100 d-flex flex-column align-items-center">
               <h4>{i.name}</h4>
@@ -136,7 +131,7 @@ export default function Perfil() {
       <br />
       <h3>Historial Aciertos</h3>
       {rowsH.map((i) => {
-        if (i.total == 0) {
+        if (i.total === 0) {
           return (
             <div className="align-items-center">
               <br />
