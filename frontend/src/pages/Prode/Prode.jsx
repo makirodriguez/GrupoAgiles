@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { CircularProgress } from "@mui/material";
-import { textAlign } from "@mui/system";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function Prode() {
   const [pre, setPre] = useState({
@@ -75,6 +75,12 @@ export default function Prode() {
         Matchday: localStorage.Matchday,
       })
       .then(() => {
+        Swal.fire({
+          title: "¡Excelente!",
+          text: "Prode cargado correctamente",
+          icon: "success",
+          timer: 2000,
+        });
         console.log(matchs.filter((item) => item.Score === null));
         console.log(pre.PartidoID);
         console.log(
@@ -82,6 +88,14 @@ export default function Prode() {
         );
         setMatchs(matchs.filter((match) => match.PartidoID !== pre.PartidoID));
         setLoading(false);
+      })
+      .catch((err) => {
+        Swal.fire({
+          title: "Error!",
+          text: "Ocurrió un error al cargar el prode",
+          icon: "error",
+          timer: 2000,
+        });
       });
   };
   if (matchs.length > 0) {
@@ -166,7 +180,7 @@ export default function Prode() {
                     }
                   }
                 });
-              
+
               return (
                 <div
                   key={index}
