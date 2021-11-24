@@ -141,7 +141,7 @@ export default function Torneos() {
         console.log(response);
         Swal.fire({
           title: "Solicitud creada correctamente!",
-          text: "EEstarás en el torneo en cuanto el creador te acepte!",
+          text: "Estarás en el torneo en cuanto el creador te acepte!",
           icon: "success",
           timer: 2000,
         });

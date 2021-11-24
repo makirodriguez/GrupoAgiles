@@ -178,7 +178,7 @@ export default function Ranking() {
           <div>
             <FacebookShareButton
               url="https://quirky-kilby-1d4b85.netlify.app/"
-              quote={"Anotate en el torneo"}
+              quote={"Sumate a FURVO y tratá de ganarme! "}
               className="Demo__some-network__share-button"
             >
               <FacebookIcon size={64} round />
@@ -187,7 +187,7 @@ export default function Ranking() {
           <div>
             <TwitterShareButton
               url="https://quirky-kilby-1d4b85.netlify.app/"
-              title={"Anotate en el torneo"}
+              title={"Sumate a FURVO y tratá de ganarme! "}
               className="Demo__some-network__share-button"
             >
               <TwitterIcon size={64} round />
@@ -196,7 +196,7 @@ export default function Ranking() {
           <div>
             <TelegramShareButton
               url="https://quirky-kilby-1d4b85.netlify.app/"
-              title={"Anotate en el torneo"}
+              title={"Sumate a FURVO y tratá de ganarme! "}
               className="Demo__some-network__share-button"
             >
               <TelegramIcon size={64} round />
@@ -205,7 +205,7 @@ export default function Ranking() {
           <div>
             <WhatsappShareButton
               url="https://quirky-kilby-1d4b85.netlify.app/"
-              title={"Anotate en el torneo"}
+              title={"Sumate a FURVO y tratá de ganarme! "}
               separator=":: "
               className="Demo__some-network__share-button"
             >
