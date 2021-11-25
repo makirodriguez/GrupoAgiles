@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 export default function Predicciones() {
   const [prediccion, getPrediccion] = useState(0);
   const [partidos, getPartidos] = useState(0);
-  const [match, setMatchs] = useState(1);
+  const [match, setMatchs] = useState(6);
   const prediccionPorUsuario = [];
   const matchs = [];
   const partidosYPredicciones = [];
@@ -45,7 +45,7 @@ export default function Predicciones() {
 
   for (let i = 0; i < prediccionPorUsuario.length; i++) {
     const elemento = prediccionPorUsuario[i].Matchday;
-    if (elemento === match) {
+    if (elemento == match) {
       partidosYPredicciones.push(prediccionPorUsuario[i]);
     }
   }
@@ -57,7 +57,7 @@ export default function Predicciones() {
       matchs.push(elemento);
     }
 
-    if (elemento === match) {
+    if (elemento == match) {
       partidosYPredicciones.push(partidos[i]);
     }
   }
